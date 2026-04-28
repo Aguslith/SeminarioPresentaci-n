@@ -1,0 +1,66 @@
+🧱 1. HTML + CSS + JS (la base)
+🧱 HTML
+Estructura la página
+🎨 CSS
+Le da diseño
+⚙️ JS
+Agrega interacción
+
+👉 Ejemplo básico:
+
+<h1>Hola</h1>
+<button onclick="saludar()">Click</button>
+
+<script>
+function saludar() {
+  alert("Hola mundo");
+}
+</script>
+⚛️ 2. React (Frontend)
+
+👉 Sirve para crear interfaces modernas
+
+Usa componentes
+Hace la web dinámica
+Ejemplo:
+function App() {
+  return <h1>Hola desde React</h1>;
+}
+⚡ 3. Vite (herramienta de desarrollo)
+
+👉 Sirve para:
+
+Crear el proyecto
+Ejecutarlo rápido
+Ver cambios en vivo
+Ejemplo:
+npm create vite@latest
+📦 4. npm
+
+👉 Sirve para instalar cosas
+
+Ejemplo:
+npm install react
+🟢 5. Node.js (Backend)
+
+👉 Sirve para:
+
+Manejar datos
+Procesar login
+Conectar con base de datos
+Ejemplo:
+const http = require("http");
+
+http.createServer((req, res) => {
+  res.end("Hola desde servidor");
+}).listen(3000);
+🔗 🔥 Ejemplo completo (cómo se conecta todo)
+
+👉 Flujo real:
+
+Usuario entra
+React muestra la interfaz
+Usuario hace click
+React envía datos a Node.js
+Node.js procesa y responde
+React actualiza la pantalla
