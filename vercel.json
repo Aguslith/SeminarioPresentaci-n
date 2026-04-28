@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd presentacion-web && npm install && npm run build",
+  "outputDirectory": "presentacion-web/dist",
+  "framework": "vite"
+}
