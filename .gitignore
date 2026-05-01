@@ -1,0 +1,7 @@
+node_modules
+dist
+dist-ssr
+*.local
+*.GIF
+presentacion-web/public/n8n_demo.GIF
+n8nPresentacion/seminario.GIF
