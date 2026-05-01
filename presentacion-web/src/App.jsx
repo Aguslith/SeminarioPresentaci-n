@@ -365,7 +365,23 @@ const ECOSYSTEM_DATA = {
     category: "🔥 Backend y Despliegue",
     logo: "/logos/New_Firebase_logo.svg.png",
     color: "#ffca28",
-    details: [{ title: "Backend as a Service", text: "Es una plataforma de desarrollo de Google (BaaS). Provee herramientas integradas como bases de datos en tiempo real, autenticación, hosting y análisis, permitiendo a los desarrolladores centrarse en la experiencia del usuario sin gestionar infraestructura compleja." }]
+    details: [
+      { 
+        title: "Backend as a Service", 
+        text: "Es una plataforma de desarrollo de Google (BaaS). Provee herramientas integradas como bases de datos en tiempo real, autenticación, hosting y análisis.",
+        image: "/images/Captura1firebase.png"
+      },
+      { 
+        title: "Estructura de Documentos", 
+        text: "Detalle de los campos de datos (string, number, boolean). Permite una estructura flexible que evoluciona con el desarrollo de la aplicación.",
+        image: "/images/Captura2Firebase.png"
+      },
+      { 
+        title: "Consola de Gestión", 
+        text: "Interfaz administrativa para monitorear el estado de la base de datos y realizar cambios manuales de forma segura en tiempo real.",
+        image: "/images/Captura3Firebase.png"
+      }
+    ]
   },
   docker: {
     title: "Docker",
@@ -476,8 +492,15 @@ function EcosystemGrid({ onSelect, onBack }) {
                 className="sub-slide-card"
                 style={{ borderLeft: `6px solid ${item.color}` }}
               >
-                <h4>{item.details[currentSubSlide].title}</h4>
-                <p>{item.details[currentSubSlide].text}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+                  {item.details[currentSubSlide].image && (
+                    <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(139, 115, 85, 0.1)', background: '#fff' }}>
+                      <img src={item.details[currentSubSlide].image} style={{ width: '100%', maxHeight: '400px', objectFit: 'contain', display: 'block' }} alt="Detail"/>
+                    </div>
+                  )}
+                  <h4>{item.details[currentSubSlide].title}</h4>
+                  <p>{item.details[currentSubSlide].text}</p>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
