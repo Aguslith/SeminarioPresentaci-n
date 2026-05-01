@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database, Lock, Link, Globe, Sparkles, CheckCircle2, Activity, Server, Monitor, HardDrive, Mail, Shield, Share2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database, Lock, Link, Globe, Sparkles, CheckCircle2, Activity, Server, Monitor, HardDrive, Mail, Shield, Share2, Brain, Code, FileText, Layout } from 'lucide-react';
 import './index.css';
 
 const CodeTooltip = ({ children, tooltipText }) => {
@@ -72,19 +72,30 @@ const N8nNode = ({ icon: Icon, title, description, color, x, y, delay }) => {
     >
       <div className="n8n-node-main" style={{ 
         background: 'white', 
-        padding: '1rem', 
+        padding: '0.8rem', 
         borderRadius: '12px', 
         boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
         border: `2px solid ${color}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '60px',
-        height: '60px'
+        width: '50px',
+        height: '50px'
       }}>
-        <Icon size={28} color={color} />
+        <Icon size={24} color={color} />
       </div>
-      <div style={{ textAlign: 'center', marginTop: '0.5rem', fontWeight: 600, fontSize: '0.8rem', color: '#555' }}>{title}</div>
+      <div style={{ 
+        position: 'absolute',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '90px',
+        textAlign: 'center', 
+        marginTop: '0.4rem', 
+        fontWeight: 700, 
+        fontSize: '0.65rem', 
+        color: '#444',
+        lineHeight: 1.1
+      }}>{title}</div>
 
       <AnimatePresence>
         {isHovered && (
@@ -130,84 +141,131 @@ const N8nNode = ({ icon: Icon, title, description, color, x, y, delay }) => {
 
 const N8nWorkflow = () => {
   return (
-    <div className="n8n-workflow-canvas" style={{ 
+    <div className="n8n-workflow-canvas responsive-diagram" style={{ 
       width: '100%', 
-      height: '400px', 
-      background: 'rgba(255,255,255,0.5)', 
+      height: '380px', 
+      background: 'rgba(255,255,255,0.8)', 
       borderRadius: '20px', 
       position: 'relative',
       overflow: 'hidden',
-      border: '1px dashed #ff6d5a'
+      border: '1px dashed #ff6d5a',
+      padding: '0',
+      transformOrigin: 'top left'
     }}>
       <svg style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
         <motion.path
-          d="M 100 200 L 300 200 L 500 120 L 700 120 M 500 280 L 700 280"
+          d="M 50 160 L 850 160 M 320 160 L 320 260 M 320 260 L 270 310 M 320 260 L 370 310"
           fill="none"
           stroke="#ff6d5a"
-          strokeWidth="3"
-          strokeDasharray="10,5"
+          strokeWidth="2"
+          strokeDasharray="8,4"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         />
       </svg>
       
       <N8nNode 
-        x={70} y={170} 
+        x={30} y={135} 
         icon={Zap} 
         title="Webhook Trigger" 
-        description="Punto de entrada. Se activa cuando recibe una petición HTTP desde cualquier servicio externo."
+        description="Punto de inicio: Recibe la petición con los datos del usuario."
         color="#ff6d5a"
+        delay={0.1}
+      />
+
+      <N8nNode 
+        x={120} y={135} 
+        icon={Activity} 
+        title="Calculate Nutrition" 
+        description="Lógica JS: Calcula el requerimiento calórico y macros."
+        color="#4a90e2"
         delay={0.2}
       />
 
       <N8nNode 
-        x={270} y={170} 
-        icon={Activity} 
-        title="Filter / Logic" 
-        description="Evalúa los datos. Por ejemplo: ¿Es un cliente premium? ¿El mensaje contiene palabras clave?"
-        color="#4a90e2"
-        delay={0.5}
+        x={220} y={135} 
+        icon={Shield} 
+        title="Filter Allergies" 
+        description="Filtro: Elimina alimentos no permitidos según perfil."
+        color="#f39c12"
+        delay={0.3}
       />
 
       <N8nNode 
-        x={470} y={90} 
+        x={320} y={135} 
+        icon={Sparkles} 
+        title="Generate Meal Plan" 
+        description="Nodo Agente: Orquesta la creación del plan semanal."
+        color="#9b59b6"
+        delay={0.4}
+      />
+
+      {/* AI Sub-nodes */}
+      <N8nNode 
+        x={250} y={285} 
+        icon={Brain} 
+        title="OpenAI Model" 
+        description="IA: Procesa el prompt y crea recetas creativas."
+        color="#10a37f"
+        delay={0.5}
+      />
+      <N8nNode 
+        x={390} y={285} 
         icon={Database} 
-        title="Google Sheets" 
-        description="Acción: Inserta una nueva fila con los datos procesados en tu hoja de cálculo automáticamente."
+        title="Output Parser" 
+        description="Estructurador: Convierte respuesta en JSON."
         color="#2ecc71"
+        delay={0.6}
+      />
+
+      <N8nNode 
+        x={450} y={135} 
+        icon={Code} 
+        title="JS Post-Process" 
+        description="Formateo: Limpia y prepara los datos finales."
+        color="#f1c40f"
+        delay={0.7}
+      />
+
+      <N8nNode 
+        x={550} y={135} 
+        icon={Layout} 
+        title="HTML Report" 
+        description="Diseño: Genera la plantilla visual con estilos CSS."
+        color="#e67e22"
         delay={0.8}
       />
 
       <N8nNode 
-        x={470} y={250} 
-        icon={Lock} 
-        title="Auth Service" 
-        description="Seguridad: Verifica tokens o credenciales antes de continuar con el flujo."
-        color="#9b59b6"
+        x={650} y={135} 
+        icon={FileText} 
+        title="HTML to PDF" 
+        description="Conversión: Transforma el reporte en un PDF."
+        color="#e74c3c"
+        delay={0.9}
+      />
+
+      <N8nNode 
+        x={750} y={135} 
+        icon={Mail} 
+        title="Send Email" 
+        description="Entrega: Envía el PDF adjunto al correo."
+        color="#d44638"
+        delay={1.0}
+      />
+
+      <N8nNode 
+        x={850} y={135} 
+        icon={CheckCircle2} 
+        title="Respond" 
+        description="Cierre: Envía confirmación al frontend."
+        color="#27ae60"
         delay={1.1}
       />
 
-      <N8nNode 
-        x={670} y={90} 
-        icon={Rocket} 
-        title="Slack Notify" 
-        description="Notificación: Envía un mensaje personalizado al equipo avisando del nuevo evento."
-        color="#e67e22"
-        delay={1.4}
-      />
-
-      <N8nNode 
-        x={670} y={250} 
-        icon={Link} 
-        title="CRM Sync" 
-        description="Sincronización: Actualiza el estado del cliente en tu CRM (HubSpot, Salesforce, etc)."
-        color="#34495e"
-        delay={1.7}
-      />
-
-      <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', fontSize: '0.8rem', color: '#ff6d5a', fontWeight: 600 }}>
-        Pasa el puntero sobre los nodos para explorar
+      <div style={{ position: 'absolute', top: '1rem', right: '1rem', fontSize: '0.7rem', color: '#ff6d5a', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
+        Workflow n8n: Automatización IA
       </div>
     </div>
   );
@@ -236,7 +294,7 @@ const ServerArchitecture = () => {
   };
 
   return (
-    <div className="architecture-canvas" style={{ 
+    <div className="architecture-canvas responsive-diagram" style={{ 
       width: '100%', 
       height: '380px', 
       background: '#f8f9fa', 
@@ -244,7 +302,8 @@ const ServerArchitecture = () => {
       position: 'relative',
       overflow: 'hidden',
       border: '2px solid #10b981',
-      padding: '1rem'
+      padding: '1rem',
+      transformOrigin: 'top left'
     }}>
       {/* Infrastructure Layers */}
       <div className="layer vm-layer" style={{ position: 'absolute', top: '10%', left: '15%', width: '40%', height: '80%', border: '2px dashed #10b981', borderRadius: '20px', padding: '1rem', background: 'rgba(16, 185, 129, 0.05)' }}>
@@ -338,27 +397,62 @@ const ServerArchitecture = () => {
         )}
       </AnimatePresence>
 
-      <button onClick={simulateFlow} className="back-btn" style={{ position: 'absolute', top: '1rem', right: '1rem', background: '#10b981', color: 'white', border: 'none' }}>
-        <Rocket size={16} /> Simular Flujo Completo
+      <button onClick={simulateFlow} className="back-btn" style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: '#10b981', color: 'white', border: 'none', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)' }}>
+        <Rocket size={16} /> Simular Flujo
       </button>
     </div>
   );
 };
 
-const ECOSYSTEM_DATA = {
-  nodejs: {
+const ECOSYSTEM_DATA = {  nodejs: {
     title: "Node.js",
     category: "⚛️ Frameworks y Entorno de Ejecución",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
     color: "#339933",
-    details: [{ title: "Servidor JavaScript", text: "Es un entorno de ejecución de JavaScript construido con el motor V8 de Chrome. Permite ejecutar código JavaScript en el lado del servidor, facilitando la creación de herramientas de red y aplicaciones backend altamente escalables y no bloqueantes." }]
+    details: [
+      { 
+        title: "¿Qué es Node.js?", 
+        text: "Es un entorno de ejecución de JavaScript orientado a eventos, construido con el motor V8 de Chrome. Permite ejecutar JavaScript fuera del navegador, específicamente en el servidor." 
+      },
+      { 
+        title: "¿Para qué sirve?", 
+        text: "Se utiliza para construir aplicaciones de red rápidas y escalables. Es ideal para aplicaciones en tiempo real como chats, servidores de API, herramientas de streaming y microservicios." 
+      },
+      { 
+        title: "¿De qué sirve?", 
+        text: "Permite usar un único lenguaje (JavaScript) tanto en el cliente como en el servidor. Su modelo de E/S no bloqueante lo hace extremadamente eficiente para manejar múltiples conexiones simultáneas con poco consumo de recursos." 
+      },
+      { 
+        title: "Ejemplos de código:", 
+        text: "Aquí tienes un ejemplo básico de cómo crear un servidor web con Express:",
+        code: "const express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.send('Servidor activo');\n});\n\napp.listen(3000, () => {\n  console.log('Puerto 3000');\n});"
+      }
+    ]
   },
   react: {
     title: "React",
     category: "⚛️ Frameworks y Entorno de Ejecución",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
     color: "#61dafb",
-    details: [{ title: "Interfaz por Componentes", text: "Es una biblioteca de JavaScript de código abierto diseñada para construir interfaces de usuario basadas en componentes. Su enfoque en el 'Virtual DOM' permite actualizaciones de datos ultra rápidas y una gestión eficiente del estado en aplicaciones web modernas." }]
+    details: [
+      { 
+        title: "¿Qué es React?", 
+        text: "Es una biblioteca de JavaScript creada por Meta para construir interfaces de usuario (UI). Se basa en componentes, lo que permite crear piezas de interfaz reutilizables e independientes que manejan su propio estado." 
+      },
+      { 
+        title: "¿Para qué sirve?", 
+        text: "Sirve para crear aplicaciones web dinámicas y de alto rendimiento (SPAs). Su principal función es actualizar de forma eficiente solo las partes de la página que cambian, gracias a su sistema de Virtual DOM." 
+      },
+      { 
+        title: "¿De qué sirve?", 
+        text: "Ofrece un desarrollo más rápido, mantenible y escalable. Facilita la creación de aplicaciones complejas al dividir la interfaz en pequeñas partes lógicas, mejorando enormemente la experiencia tanto del desarrollador como del usuario final." 
+      },
+      { 
+        title: "Ejemplos de código:", 
+        text: "Aquí puedes ver cómo se define un componente simple con estado en React:",
+        code: "function Contador() {\n  const [clicks, setClicks] = useState(0);\n\n  return (\n    <button onClick={() => setClicks(clicks + 1)}>\n      Has hecho {clicks} clicks\n    </button>\n  );\n}"
+      }
+    ]
   },
   firebase: {
     title: "Firebase",
@@ -402,7 +496,11 @@ const ECOSYSTEM_DATA = {
     category: "🐳 Infraestructura y Conectividad",
     logo: "/logos/N8n-logo-new.svg.png",
     color: "#ff6d5a",
-    details: [{ title: "Automatización", text: "Es una herramienta de automatización de flujo de trabajo basada en nodos y de código abierto. Permite conectar diferentes aplicaciones y servicios para crear procesos automatizados complejos con una interfaz visual intuitiva." }]
+    isWorkflow: true,
+    details: [{ 
+      title: "Automatización de Dieta con IA", 
+      text: "Este flujo avanzado conecta el frontend con OpenAI. Procesa los requerimientos nutricionales calculados, genera un plan de comidas personalizado mediante IA, lo convierte en un reporte HTML/PDF profesional y lo entrega automáticamente por email." 
+    }]
   }
 };
 
@@ -500,13 +598,39 @@ function EcosystemGrid({ onSelect, onBack }) {
                   )}
                   <h4>{item.details[currentSubSlide].title}</h4>
                   <p>{item.details[currentSubSlide].text}</p>
+                  {item.details[currentSubSlide].code && (
+                    <div className="code-block" style={{ marginTop: '1rem', fontSize: '0.85rem', background: '#2C2A29', color: '#61dafb', border: '1px solid #61dafb' }}>
+                      <pre style={{ margin: 0 }}>{item.details[currentSubSlide].code}</pre>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {!item.isWorkflow && !item.isArchitecture && (
-            <div className="sub-controls">
+        {/* Navigation Controls: Side arrows for Desktop, Bottom controls for Mobile */}
+        {!item.isWorkflow && !item.isArchitecture && item.details.length > 1 && (
+          <>
+            {/* Desktop Side Arrows */}
+            <button 
+              className="sub-btn side-nav-btn left" 
+              onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
+              disabled={currentSubSlide === 0}
+              style={{ position: 'absolute', left: '-60px', top: '50%', transform: 'translateY(-50%)' }}
+            >
+              <ChevronLeft />
+            </button>
+            <button 
+              className="sub-btn side-nav-btn right" 
+              onClick={() => setCurrentSubSlide(prev => Math.min(item.details.length - 1, prev + 1))}
+              disabled={currentSubSlide === item.details.length - 1}
+              style={{ position: 'absolute', right: '-60px', top: '50%', transform: 'translateY(-50%)' }}
+            >
+              <ChevronRight />
+            </button>
+
+            {/* Mobile/Small Screen Controls */}
+            <div className="mobile-sub-controls" style={{ display: 'none', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem' }}>
               <button 
                 className="sub-btn" 
                 onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
@@ -514,7 +638,7 @@ function EcosystemGrid({ onSelect, onBack }) {
               >
                 <ChevronLeft />
               </button>
-              <div className="sub-dots">
+              <div className="sub-dots" style={{ margin: 0 }}>
                 {item.details.map((_, i) => (
                   <div key={i} className={`dot ${i === currentSubSlide ? 'active' : ''}`} style={{ backgroundColor: i === currentSubSlide ? item.color : '#ccc' }} />
                 ))}
@@ -527,8 +651,18 @@ function EcosystemGrid({ onSelect, onBack }) {
                 <ChevronRight />
               </button>
             </div>
-          )}
+          </>
+        )}
+      </div>
+
+      {/* Desktop Dots at the bottom */}
+      {!item.isWorkflow && !item.isArchitecture && item.details.length > 1 && (
+        <div className="sub-dots desktop-dots" style={{ justifyContent: 'center', marginTop: '2rem' }}>
+          {item.details.map((_, i) => (
+            <div key={i} className={`dot ${i === currentSubSlide ? 'active' : ''}`} style={{ backgroundColor: i === currentSubSlide ? item.color : '#ccc' }} />
+          ))}
         </div>
+      )}
       </motion.div>
     );
   }
@@ -565,7 +699,6 @@ const slidesData = [
         <h2 style={{ fontSize: '4.5rem', fontWeight: 800, marginBottom: '2rem', background: 'linear-gradient(to right, #8B7355, #D4A373)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1.2 }}>
           Presentamos:
         </h2>
-        <h3 style={{ fontSize: '2rem', color: '#5A5650', marginBottom: '2rem', fontFamily: 'Inter, sans-serif', fontWeight: 400 }}>Temas son:</h3>
         <div className="carousel-container">
           <div className="carousel-track">
             {[
@@ -598,21 +731,24 @@ const slidesData = [
   {
     id: 1,
     title: "Fundamentos Web",
-    subtitle: "El Trío Dinámico",
+    subtitle: "Lenguajes Esenciales",
     content: (
-      <div className="grid-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1rem' }}>
-            <h4 style={{ color: '#e34f26', fontSize: '1rem', marginBottom: '0.5rem' }}>HTML</h4>
-            <p style={{ fontSize: '0.8rem', lineHeight: 1.4 }}>Estructura y significado del contenido mediante etiquetas.</p>
+      <div className="grid-content" style={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" style={{ height: '40px', marginBottom: '1rem' }} alt="HTML5"/>
+            <h4 style={{ color: '#e34f26', fontSize: '1.2rem', marginBottom: '0.5rem' }}>HTML</h4>
+            <p style={{ fontSize: '0.85rem', lineHeight: 1.5, color: '#666' }}>Estructura y significado del contenido mediante etiquetas.</p>
           </motion.div>
-          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1rem' }}>
-            <h4 style={{ color: '#1572b6', fontSize: '1rem', marginBottom: '0.5rem' }}>CSS</h4>
-            <p style={{ fontSize: '0.8rem', lineHeight: 1.4 }}>Diseño, colores y animaciones para la capa visual.</p>
+          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" style={{ height: '40px', marginBottom: '1rem' }} alt="CSS3"/>
+            <h4 style={{ color: '#1572b6', fontSize: '1.2rem', marginBottom: '0.5rem' }}>CSS</h4>
+            <p style={{ fontSize: '0.85rem', lineHeight: 1.5, color: '#666' }}>Diseño, colores y animaciones para la capa visual.</p>
           </motion.div>
-          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1rem' }}>
-            <h4 style={{ color: '#3178c6', fontSize: '1rem', marginBottom: '0.5rem' }}>TypeScript</h4>
-            <p style={{ fontSize: '0.8rem', lineHeight: 1.4 }}>JavaScript con tipado robusto para evitar errores.</p>
+          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" style={{ height: '40px', marginBottom: '1rem' }} alt="JS"/>
+            <h4 style={{ color: '#f7df1e', fontSize: '1.2rem', marginBottom: '0.5rem' }}>JavaScript</h4>
+            <p style={{ fontSize: '0.85rem', lineHeight: 1.5, color: '#666' }}>Interactividad y lógica dinámica en el cliente.</p>
           </motion.div>
         </div>
 
@@ -647,10 +783,9 @@ const slidesData = [
             <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>{'}'}</div>
 
             {/* TS Part */}
-            <div style={{ color: '#888', fontStyle: 'italic', marginBottom: '4px' }}>// script.ts</div>
+            <div style={{ color: '#888', fontStyle: 'italic', marginBottom: '4px' }}>// script.js</div>
             <div style={{ paddingLeft: '1rem' }}>
-              const <CodeTooltip tooltipText="Nombre de variable">user</CodeTooltip>: 
-              <CodeTooltip tooltipText="Tipo de dato string">string</CodeTooltip> = "Agustin";
+              const <CodeTooltip tooltipText="Nombre de variable">user</CodeTooltip> = "Agustin";
             </div>
           </div>
         </motion.div>
@@ -660,9 +795,9 @@ const slidesData = [
   {
     id: 2,
     title: "Tecnologías de Soporte",
-    subtitle: "Instalación y Propósito",
+    subtitle: "Herramientas de Desarrollo",
     content: (
-      <div className="grid-content" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', width: '100%' }}>
+      <div className="grid-content" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '2rem', width: '100%', maxWidth: '900px', margin: '0 auto' }}>
         <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
           <div style={{ flex: 1 }}>
             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="Vite"/>
@@ -688,22 +823,6 @@ const slidesData = [
           <div className="code-block" style={{ fontSize: '0.75rem', padding: '0.8rem', textAlign: 'left', background: '#2c2a29', color: '#fff' }}>
             <span style={{ color: '#888' }}># Instalar dependencia</span>
             <br />npm install {"<nombre>"}
-          </div>
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ background: '#1f1e1e', padding: '8px', borderRadius: '12px', display: 'inline-block', marginBottom: '0.8rem' }}>
-              <img src="https://raw.githubusercontent.com/josh-65/ngrok-logo/master/ngrok-logo.png" style={{ height: '35px' }} alt="ngrok"/>
-            </div>
-            <h4 style={{ fontSize: '1.4rem' }}>ngrok</h4>
-            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
-              <strong>Propósito:</strong> Compartir tu trabajo local con clientes o probar webhooks en vivo.
-            </p>
-          </div>
-          <div className="code-block" style={{ fontSize: '0.75rem', padding: '0.8rem', textAlign: 'left', background: '#2c2a29', color: '#fff' }}>
-            <span style={{ color: '#888' }}># Exponer puerto local</span>
-            <br />ngrok http 5173
           </div>
         </motion.div>
       </div>
