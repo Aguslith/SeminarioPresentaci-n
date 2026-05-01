@@ -346,75 +346,47 @@ const ServerArchitecture = () => {
 };
 
 const ECOSYSTEM_DATA = {
-  docker: {
-    title: "Docker",
-    logo: "/logos/Docker_Logo.png",
-    color: "#2496ed",
-    details: [
-      { title: "Contenedores", text: "Empaqueta tu app con todas sus dependencias. 'Si funciona en mi PC, funciona en el servidor'." },
-      { title: "Aislamiento", text: "Cada contenedor corre en su propio entorno, evitando conflictos entre versiones de software." },
-      { title: "Portabilidad", text: "Lleva tu infraestructura a AWS, Azure o tu propio servidor con un solo comando." }
-    ]
+  nodejs: {
+    title: "Node.js",
+    category: "⚛️ Frameworks y Entorno de Ejecución",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+    color: "#339933",
+    details: [{ title: "Servidor JavaScript", text: "Es un entorno de ejecución de JavaScript construido con el motor V8 de Chrome. Permite ejecutar código JavaScript en el lado del servidor, facilitando la creación de herramientas de red y aplicaciones backend altamente escalables y no bloqueantes." }]
+  },
+  react: {
+    title: "React",
+    category: "⚛️ Frameworks y Entorno de Ejecución",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+    color: "#61dafb",
+    details: [{ title: "Interfaz por Componentes", text: "Es una biblioteca de JavaScript de código abierto diseñada para construir interfaces de usuario basadas en componentes. Su enfoque en el 'Virtual DOM' permite actualizaciones de datos ultra rápidas y una gestión eficiente del estado en aplicaciones web modernas." }]
   },
   firebase: {
     title: "Firebase",
+    category: "🔥 Backend y Despliegue",
     logo: "/logos/New_Firebase_logo.svg.png",
     color: "#ffca28",
-    details: [
-      { 
-        title: "Firebase", 
-        text: "Es una plataforma de desarrollo de aplicaciones creada por Google que ofrece servicios de backend listos para usar. Se basa en el concepto de Backend as a Service, lo que significa que no es necesario desarrollar ni mantener un servidor propio. Esto permite a los desarrolladores enfocarse principalmente en el frontend de la aplicación." 
-      },
-      { 
-        title: "¿Cómo funciona Firebase?", 
-        text: "Funciona mediante servicios en la nube a los que la aplicación se conecta utilizando un SDK. Un SDK es un conjunto de herramientas y librerías que permite integrar fácilmente un servicio dentro de una aplicación. El SDK actúa como intermediario entre nuestra app y los servicios en la nube." 
-      },
-      { 
-        title: "Firestore (base de datos)", 
-        text: "Uno de los servicios principales es Firebase Firestore, que es una base de datos NoSQL. A diferencia de las bases de datos tradicionales, no utiliza tablas, sino colecciones y documentos. Cada colección contiene documentos, y cada documento almacena información en formato clave-valor." 
-      },
-      { 
-        title: "Firebase Auth", 
-        text: "Utilizamos Firebase Authentication para gestionar el registro e inicio de sesión de usuarios mediante correo electrónico y contraseña. Este servicio permite manejar la autenticación de forma segura sin necesidad de implementarla manualmente." 
-      },
-      { 
-        title: "Conexión con la aplicación", 
-        text: "La conexión se realiza mediante su SDK. Para esto, Firebase nos proporciona una configuración única del proyecto, que incluye datos como API Key y Project ID." 
-      }
-    ]
+    details: [{ title: "Backend as a Service", text: "Es una plataforma de desarrollo de Google (BaaS). Provee herramientas integradas como bases de datos en tiempo real, autenticación, hosting y análisis, permitiendo a los desarrolladores centrarse en la experiencia del usuario sin gestionar infraestructura compleja." }]
   },
-  n8n: {
-    title: "n8n",
-    logo: "/logos/N8n-logo-new.svg.png",
-    color: "#ff6d5a",
-    isWorkflow: true,
-    details: [
-      { title: "Ilustración del Flujo", text: "Interactúa con los nodos para ver cómo fluye la información." }
-    ]
+  docker: {
+    title: "Docker",
+    category: "🐳 Infraestructura y Conectividad",
+    logo: "/logos/Docker_Logo.png",
+    color: "#2496ed",
+    details: [{ title: "Contenerización", text: "Es una plataforma de contenerización que empaqueta aplicaciones y sus dependencias en 'contenedores' aislados. Esto garantiza que el software se ejecute de manera idéntica en cualquier entorno, eliminando el clásico problema de 'en mi máquina sí funciona'." }]
   },
   rocky: {
     title: "Rocky Linux",
+    category: "🔥 Backend y Despliegue",
     logo: "/logos/Rocky_Linux_wordmark.svg.png",
     color: "#10b981",
-    isArchitecture: true,
-    details: [
-      { 
-        title: "Infraestructura", 
-        text: "Mi rol fue preparar el entorno donde todas las tecnologías se ejecutan y comunican. Trabajamos sobre una Máquina Virtual que simula una computadora física para trabajar de forma aislada y segura." 
-      },
-      { 
-        title: "Rocky Linux", 
-        text: "Es la distribución Linux elegida por su estabilidad, seguridad y rendimiento para servidores. Sobre ella implementamos Docker para organizar todos los servicios en contenedores aislados." 
-      },
-      { 
-        title: "Comunicación Interna", 
-        text: "Docker crea una red privada donde el Frontend y el Backend se comunican directamente. El Backend se conecta con Firebase mediante el Admin SDK y con n8n mediante webhooks seguros." 
-      },
-      { 
-        title: "Flujo de Usuario", 
-        text: "Usuario → Frontend → Backend → Firebase → n8n. Este flujo asegura que los datos se procesen, almacenen y automaticen correctamente antes de responder al usuario." 
-      }
-    ]
+    details: [{ title: "Sistema Operativo", text: "Es una distribución de Linux empresarial, de código abierto y gratuita, diseñada para ser 100% compatible con Red Hat Enterprise Linux (RHEL). Es el sucesor espiritual de CentOS, ideal para servidores que requieren máxima estabilidad y seguridad." }]
+  },
+  n8n: {
+    title: "n8n",
+    category: "🐳 Infraestructura y Conectividad",
+    logo: "/logos/N8n-logo-new.svg.png",
+    color: "#ff6d5a",
+    details: [{ title: "Automatización", text: "Es una herramienta de automatización de flujo de trabajo basada en nodos y de código abierto. Permite conectar diferentes aplicaciones y servicios para crear procesos automatizados complejos con una interfaz visual intuitiva." }]
   }
 };
 
@@ -548,11 +520,12 @@ function EcosystemGrid({ onSelect, onBack }) {
           onClick={() => handleSelect(key)}
           whileHover={{ y: -5, boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
           whileTap={{ scale: 0.98 }}
-          style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '2rem' }}
+          style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '1.5rem' }}
         >
-          <img src={item.logo} alt={item.title} style={{ height: '60px', marginBottom: '1rem', objectFit: 'contain' }} />
-          <h3 style={{ margin: 0 }}>{item.title}</h3>
-          <p style={{ fontSize: '0.9rem', color: '#888', marginTop: '0.5rem' }}>Click para expandir</p>
+          <div style={{ fontSize: '0.7rem', color: item.color, fontWeight: 800, marginBottom: '0.5rem', opacity: 0.8 }}>{item.category.toUpperCase()}</div>
+          <img src={item.logo} alt={item.title} style={{ height: '45px', marginBottom: '0.8rem', objectFit: 'contain' }} />
+          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>{item.title}</h3>
+          <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '0.4rem' }}>Click para definición</p>
         </motion.div>
       ))}
     </div>
@@ -567,19 +540,30 @@ const slidesData = [
     content: (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', height: '100%', justifyContent: 'center' }}>
         <h2 style={{ fontSize: '4.5rem', fontWeight: 800, marginBottom: '2rem', background: 'linear-gradient(to right, #8B7355, #D4A373)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1.2 }}>
-          Presentamos...
+          Presentamos:
         </h2>
-        <h3 style={{ fontSize: '2rem', color: '#5A5650', marginBottom: '2rem', fontFamily: 'Inter, sans-serif', fontWeight: 400 }}>Fundamentos del Desarrollo Web</h3>
+        <h3 style={{ fontSize: '2rem', color: '#5A5650', marginBottom: '2rem', fontFamily: 'Inter, sans-serif', fontWeight: 400 }}>Temas son:</h3>
         <div className="carousel-container">
           <div className="carousel-track">
-            <div className="carousel-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" className="carousel-icon" alt="HTML5"/> HTML5</div>
-            <div className="carousel-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" className="carousel-icon" alt="CSS3"/> CSS3</div>
-            <div className="carousel-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" className="carousel-icon" alt="TS"/> TypeScript</div>
-            <div className="carousel-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" className="carousel-icon" alt="JS"/> JavaScript</div>
-            <div className="carousel-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" className="carousel-icon" alt="HTML5"/> HTML5</div>
-            <div className="carousel-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" className="carousel-icon" alt="CSS3"/> CSS3</div>
-            <div className="carousel-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" className="carousel-icon" alt="TS"/> TypeScript</div>
-            <div className="carousel-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" className="carousel-icon" alt="JS"/> JavaScript</div>
+            {[
+              { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
+              { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
+              { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
+              { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
+              { name: "Rocky Linux", icon: "/logos/Rocky_Linux_wordmark.svg" },
+              { name: "n8n", icon: "/logos/N8n-logo-new.svg.png" }
+            ].concat([
+              { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
+              { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
+              { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
+              { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
+              { name: "Rocky Linux", icon: "/logos/Rocky_Linux_wordmark.svg" },
+              { name: "n8n", icon: "/logos/N8n-logo-new.svg.png" }
+            ]).map((tech, index) => (
+              <div key={index} className="carousel-item">
+                <img src={tech.icon} className="carousel-icon" alt={tech.name}/> {tech.name}
+              </div>
+            ))}
           </div>
         </div>
         <div style={{ marginTop: 'auto', paddingTop: '2rem', fontSize: '1.2rem', color: '#5A5650', fontFamily: 'Inter, sans-serif' }}>
@@ -590,25 +574,61 @@ const slidesData = [
   },
   {
     id: 1,
-    title: "HTML",
-    subtitle: "El Esqueleto de la Web",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",
+    title: "Fundamentos Web",
+    subtitle: "El Trío Dinámico",
     content: (
-      <div className="grid-content" style={{ display: 'block' }}>
-        <motion.div variants={itemVariants} className="info-card" style={{ marginBottom: '2rem' }}>
-          <p><ArrowRight size={20} className="inline-icon" /> <strong>HyperText Markup Language</strong>. Es el lenguaje estándar para crear la estructura de las páginas web.</p>
-          <ul style={{ paddingLeft: '2rem', marginTop: '1rem', listStyle: 'none' }}>
-            <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Globe size={20} color="#8B7355" /> Define el contenido semántico</li>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Rocket size={20} color="#8B7355" /> Proporciona los bloques básicos</li>
-          </ul>
-        </motion.div>
-        <motion.div variants={itemVariants} className="info-card">
-          <h3>Estructura básica:</h3>
-          <div className="code-block" style={{ fontFamily: 'monospace' }}>
-            <div><CodeTooltip tooltipText="Contenedor principal">{'<div'}</CodeTooltip> class="container"{'>'}</div>
-            <div style={{ paddingLeft: '1.5rem' }}><CodeTooltip tooltipText="Título">{'<h1>'}</CodeTooltip>Hola Mundo{'</h1>'}</div>
-            <div style={{ paddingLeft: '1.5rem' }}><CodeTooltip tooltipText="Párrafo">{'<p>'}</CodeTooltip>Bienvenidos.{'</p>'}</div>
-            <div>{'</div>'}</div>
+      <div className="grid-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1rem' }}>
+            <h4 style={{ color: '#e34f26', fontSize: '1rem', marginBottom: '0.5rem' }}>HTML</h4>
+            <p style={{ fontSize: '0.8rem', lineHeight: 1.4 }}>Estructura y significado del contenido mediante etiquetas.</p>
+          </motion.div>
+          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1rem' }}>
+            <h4 style={{ color: '#1572b6', fontSize: '1rem', marginBottom: '0.5rem' }}>CSS</h4>
+            <p style={{ fontSize: '0.8rem', lineHeight: 1.4 }}>Diseño, colores y animaciones para la capa visual.</p>
+          </motion.div>
+          <motion.div variants={itemVariants} className="info-card" style={{ padding: '1rem' }}>
+            <h4 style={{ color: '#3178c6', fontSize: '1rem', marginBottom: '0.5rem' }}>TypeScript</h4>
+            <p style={{ fontSize: '0.8rem', lineHeight: 1.4 }}>JavaScript con tipado robusto para evitar errores.</p>
+          </motion.div>
+        </div>
+
+        <motion.div variants={itemVariants} className="info-card" style={{ marginTop: '0.5rem' }}>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Código Interactivo (pasa el cursor):</h3>
+          <div className="code-block" style={{ fontSize: '1rem', lineHeight: 1.6 }}>
+            {/* HTML Part */}
+            <div style={{ color: '#888', fontStyle: 'italic', marginBottom: '4px' }}>// index.html</div>
+            <div style={{ paddingLeft: '1rem' }}>
+              {'<'}
+              <CodeTooltip tooltipText="Etiqueta de apertura">div</CodeTooltip> 
+              {' '}
+              <CodeTooltip tooltipText="Atributo de clase">class</CodeTooltip>="container"{'>'}
+            </div>
+            <div style={{ paddingLeft: '2rem' }}>
+              {'<'}
+              <CodeTooltip tooltipText="Etiqueta de encabezado">h1</CodeTooltip>
+              {'>'}Hola Mundo{'</'}
+              <CodeTooltip tooltipText="Etiqueta de cierre">h1</CodeTooltip>
+              {'>'}
+            </div>
+            <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>{'</div>'}</div>
+
+            {/* CSS Part */}
+            <div style={{ color: '#888', fontStyle: 'italic', marginBottom: '4px' }}>// styles.css</div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <CodeTooltip tooltipText="Selector de clase">.container</CodeTooltip> {' { '}
+            </div>
+            <div style={{ paddingLeft: '2rem' }}>
+              <CodeTooltip tooltipText="Propiedad CSS">background</CodeTooltip>: #fff;
+            </div>
+            <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>{'}'}</div>
+
+            {/* TS Part */}
+            <div style={{ color: '#888', fontStyle: 'italic', marginBottom: '4px' }}>// script.ts</div>
+            <div style={{ paddingLeft: '1rem' }}>
+              const <CodeTooltip tooltipText="Nombre de variable">user</CodeTooltip>: 
+              <CodeTooltip tooltipText="Tipo de dato string">string</CodeTooltip> = "Agustin";
+            </div>
           </div>
         </motion.div>
       </div>
@@ -616,25 +636,51 @@ const slidesData = [
   },
   {
     id: 2,
-    title: "CSS",
-    subtitle: "La Piel de la Web",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg",
+    title: "Tecnologías de Soporte",
+    subtitle: "Instalación y Propósito",
     content: (
-      <div className="grid-content" style={{ display: 'block' }}>
-        <motion.div variants={itemVariants} className="info-card" style={{ marginBottom: '2rem' }}>
-          <p><ArrowRight size={20} className="inline-icon" /> <strong>Cascading Style Sheets</strong>. Es el lenguaje encargado del diseño visual.</p>
-          <ul style={{ paddingLeft: '2rem', marginTop: '1rem', listStyle: 'none' }}>
-            <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Sparkles size={20} color="#8B7355" /> Controla colores y tipografías</li>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Eye size={20} color="#8B7355" /> Permite crear animaciones</li>
-          </ul>
+      <div className="grid-content" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', width: '100%' }}>
+        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <div style={{ flex: 1 }}>
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="Vite"/>
+            <h4 style={{ fontSize: '1.4rem' }}>Vite</h4>
+            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
+              <strong>Propósito:</strong> Acelerar el desarrollo eliminando tiempos de espera en compilación.
+            </p>
+          </div>
+          <div className="code-block" style={{ fontSize: '0.75rem', padding: '0.8rem', textAlign: 'left', background: '#2c2a29', color: '#fff' }}>
+            <span style={{ color: '#888' }}># Crear proyecto</span>
+            <br />npm create vite@latest
+          </div>
         </motion.div>
-        <motion.div variants={itemVariants} className="info-card">
-          <h3>Ejemplo de Estilo:</h3>
-          <div className="code-block" style={{ fontFamily: 'monospace' }}>
-            <div><CodeTooltip tooltipText="Selector">{'h1 {'}</CodeTooltip></div>
-            <div style={{ paddingLeft: '1.5rem' }}><CodeTooltip tooltipText="Color">{'color:'}</CodeTooltip> #D4A373;</div>
-            <div style={{ paddingLeft: '1.5rem' }}><CodeTooltip tooltipText="Tamaño">{'font-size:'}</CodeTooltip> 32px;</div>
-            <div>{'}'}</div>
+
+        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <div style={{ flex: 1 }}>
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/npm/npm-original-wordmark.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="npm"/>
+            <h4 style={{ fontSize: '1.4rem' }}>npm</h4>
+            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
+              <strong>Propósito:</strong> Instalar y gestionar todas las librerías necesarias para que la app funcione.
+            </p>
+          </div>
+          <div className="code-block" style={{ fontSize: '0.75rem', padding: '0.8rem', textAlign: 'left', background: '#2c2a29', color: '#fff' }}>
+            <span style={{ color: '#888' }}># Instalar dependencia</span>
+            <br />npm install {"<nombre>"}
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ background: '#1f1e1e', padding: '8px', borderRadius: '12px', display: 'inline-block', marginBottom: '0.8rem' }}>
+              <img src="https://raw.githubusercontent.com/josh-65/ngrok-logo/master/ngrok-logo.png" style={{ height: '35px' }} alt="ngrok"/>
+            </div>
+            <h4 style={{ fontSize: '1.4rem' }}>ngrok</h4>
+            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
+              <strong>Propósito:</strong> Compartir tu trabajo local con clientes o probar webhooks en vivo.
+            </p>
+          </div>
+          <div className="code-block" style={{ fontSize: '0.75rem', padding: '0.8rem', textAlign: 'left', background: '#2c2a29', color: '#fff' }}>
+            <span style={{ color: '#888' }}># Exponer puerto local</span>
+            <br />ngrok http 5173
           </div>
         </motion.div>
       </div>
@@ -642,31 +688,6 @@ const slidesData = [
   },
   {
     id: 3,
-    title: "TypeScript",
-    subtitle: "JavaScript con Superpoderes",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
-    content: (
-      <div className="grid-content" style={{ display: 'block' }}>
-        <motion.div variants={itemVariants} className="info-card" style={{ marginBottom: '2rem' }}>
-          <p><ArrowRight size={20} className="inline-icon" /> Superconjunto de JavaScript que añade tipos estáticos.</p>
-          <ul style={{ paddingLeft: '2rem', marginTop: '1rem', listStyle: 'none' }}>
-            <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><CheckCircle2 size={20} color="#8B7355" /> Detecta errores en desarrollo</li>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Database size={20} color="#8B7355" /> Facilita el mantenimiento</li>
-          </ul>
-        </motion.div>
-        <motion.div variants={itemVariants} className="info-card">
-          <h3>Tipado en TypeScript:</h3>
-          <div className="code-block" style={{ fontFamily: 'monospace' }}>
-            <div>{'function saludar('}<CodeTooltip tooltipText="Tipo string">{'nombre: string'}</CodeTooltip>{') {'}</div>
-            <div style={{ paddingLeft: '1.5rem' }}>{'return `Hola, ${nombre}`;'}</div>
-            <div>{'}'}</div>
-          </div>
-        </motion.div>
-      </div>
-    )
-  },
-  {
-    id: 4,
     title: "Ecosistema Tecnológico",
     subtitle: "Click en un cuadro para profundizar",
     content: (props) => <EcosystemGrid {...props} />
@@ -729,9 +750,23 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className="controls">
-        <button className="btn" onClick={() => paginate(-1)} disabled={page === 0}><ChevronLeft /> Anterior</button>
-        <button className="btn" onClick={() => paginate(1)} disabled={page === slidesData.length - 1}>Siguiente <ChevronRight /></button>
+      <div className="nav-controls">
+        <div 
+          className={`nav-zone nav-left ${page === 0 ? 'disabled' : ''}`} 
+          onClick={() => paginate(-1)}
+        >
+          <div className="nav-hint">
+            <ChevronLeft size={48} />
+          </div>
+        </div>
+        <div 
+          className={`nav-zone nav-right ${page === slidesData.length - 1 ? 'disabled' : ''}`} 
+          onClick={() => paginate(1)}
+        >
+          <div className="nav-hint">
+            <ChevronRight size={48} />
+          </div>
+        </div>
       </div>
       <div className="progress-bar-container">
         <div className="progress-bar" style={{ width: `${((page + 1) / slidesData.length) * 100}%` }}></div>
