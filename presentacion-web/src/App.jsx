@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database
 import './index.css';
 
 const PresentationTools = ({ isVisible }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [activeTool, setActiveTool] = useState(null); // 'laser', 'brush'
   const [zoomLevel, setZoomLevel] = useState(1);
   const [laserPos, setLaserPos] = useState({ x: 0, y: 0 });
@@ -16,8 +17,9 @@ const PresentationTools = ({ isVisible }) => {
       setActiveTool(null);
       setZoomLevel(1);
       clearCanvas();
+      setIsExpanded(false);
     }
-  }, [isVisible]);
+  }, [isVisible, setActiveTool, setZoomLevel]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,75 +82,92 @@ const PresentationTools = ({ isVisible }) => {
 
   return (
     <>
-      <div className="presentation-toolbar" style={{
-        position: 'fixed',
-        bottom: '2.5rem',
-        left: '2.5rem',
-        zIndex: 5000,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        background: 'rgba(15, 15, 15, 0.95)',
-        backdropFilter: 'blur(20px)',
-        padding: '10px 18px',
-        borderRadius: '100px',
-        border: '1px solid rgba(255,255,255,0.15)',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
-        color: 'white'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <motion.div 
+        className="presentation-toolbar" 
+        animate={{ width: isExpanded ? 'auto' : '160px' }}
+        style={{
+          position: 'fixed',
+          bottom: '2.5rem',
+          left: '2.5rem',
+          zIndex: 5000,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          background: 'rgba(15, 15, 15, 0.95)',
+          backdropFilter: 'blur(20px)',
+          padding: '10px 18px',
+          borderRadius: '100px',
+          border: '1px solid rgba(255,255,255,0.15)',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+          color: 'white',
+          cursor: 'pointer',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap'
+        }}
+        onClick={() => !isExpanded && setIsExpanded(true)}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={(e) => { if(isExpanded) { e.stopPropagation(); setIsExpanded(false); } }}>
           <Wand2 size={16} color="#ff6d5a" />
-          <span style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.8 }}>Herramientas</span>
+          <span style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.8 }}>
+            {isExpanded ? 'Cerrar' : 'Herramientas'}
+          </span>
         </div>
         
-        <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
-
-        <button 
-          onClick={() => setActiveTool(activeTool === 'laser' ? null : 'laser')}
-          style={{ 
-            background: activeTool === 'laser' ? '#ff6d5a' : 'rgba(255,255,255,0.05)', 
-            border: 'none', color: 'white', padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'all 0.3s' 
-          }}
-          title="Puntero Láser"
-        >
-          <MousePointer2 size={18} />
-        </button>
-
-        <button 
-          onClick={() => setActiveTool(activeTool === 'brush' ? null : 'brush')}
-          style={{ 
-            background: activeTool === 'brush' ? '#ff6d5a' : 'rgba(255,255,255,0.05)', 
-            border: 'none', color: 'white', padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'all 0.3s' 
-          }}
-          title="Pincel para dibujar"
-        >
-          <PenTool size={18} />
-        </button>
-
-        {activeTool === 'brush' && (
-          <button 
-            onClick={clearCanvas}
-            style={{ background: 'rgba(255,109,90,0.1)', border: 'none', color: '#ff6d5a', padding: '10px', borderRadius: '50%', cursor: 'pointer' }}
-            title="Borrar anotaciones"
+        {isExpanded && (
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
           >
-            <Eraser size={18} />
-          </button>
+            <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
+
+            <button 
+              onClick={(e) => { e.stopPropagation(); setActiveTool(activeTool === 'laser' ? null : 'laser'); }}
+              style={{ 
+                background: activeTool === 'laser' ? '#ff6d5a' : 'rgba(255,255,255,0.05)', 
+                border: 'none', color: 'white', padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'all 0.3s' 
+              }}
+              title="Puntero Láser"
+            >
+              <MousePointer2 size={18} />
+            </button>
+
+            <button 
+              onClick={(e) => { e.stopPropagation(); setActiveTool(activeTool === 'brush' ? null : 'brush'); }}
+              style={{ 
+                background: activeTool === 'brush' ? '#ff6d5a' : 'rgba(255,255,255,0.05)', 
+                border: 'none', color: 'white', padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'all 0.3s' 
+              }}
+              title="Pincel para dibujar"
+            >
+              <PenTool size={18} />
+            </button>
+
+            {activeTool === 'brush' && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); clearCanvas(); }}
+                style={{ background: 'rgba(255,109,90,0.1)', border: 'none', color: '#ff6d5a', padding: '10px', borderRadius: '50%', cursor: 'pointer' }}
+                title="Borrar anotaciones"
+              >
+                <Eraser size={18} />
+              </button>
+            )}
+
+            <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.75rem', fontWeight: 600 }}>
+              <ZoomIn size={16} />
+              <span>{Math.round(zoomLevel * 100)}%</span>
+            </div>
+
+            {zoomLevel > 1 && (
+              <button onClick={(e) => { e.stopPropagation(); setZoomLevel(1); }} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '5px 12px', borderRadius: '50px', fontSize: '0.65rem', cursor: 'pointer' }}>
+                Reset
+              </button>
+            )}
+          </motion.div>
         )}
-
-        <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.75rem', fontWeight: 600 }}>
-          <ZoomIn size={16} />
-          <span>{Math.round(zoomLevel * 100)}%</span>
-          <span style={{ opacity: 0.5, fontSize: '0.6rem' }}>(Ctrl + Rueda)</span>
-        </div>
-
-        {zoomLevel > 1 && (
-          <button onClick={() => setZoomLevel(1)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '5px 12px', borderRadius: '50px', fontSize: '0.65rem', cursor: 'pointer' }}>
-            Reset
-          </button>
-        )}
-      </div>
+      </motion.div>
 
       {/* Global Zoom Effect */}
       <style>{`
@@ -229,7 +248,7 @@ const ZoomableImage = ({ src, alt }) => {
       style={{
         position: 'relative',
         width: '100%',
-        height: '420px',
+        height: '350px',
         borderRadius: '16px',
         overflow: 'hidden',
         cursor: 'zoom-in',
@@ -703,9 +722,9 @@ const ECOSYSTEM_DATA = {  nodejs: {
         text: "Permite usar un único lenguaje (JavaScript) tanto en el cliente como en el servidor. Su modelo de E/S no bloqueante lo hace extremadamente eficiente para manejar múltiples conexiones simultáneas con poco consumo de recursos." 
       },
       { 
-        title: "Ejemplos de código:", 
-        text: "Aquí tienes un ejemplo básico de cómo crear un servidor web con Express:",
-        code: "const express = require('express');\nconst app = express();\n\n// Endpoints de Autenticación\napp.post('/login', (req, res) => { ... });\napp.post('/register', (req, res) => { ... });\n\napp.listen(5000, () => {\n  console.log('Puerto 5000');\n});"
+        title: "Ejemplos de código (Express + n8n):", 
+        text: "Aquí tienes el código real del backend que conecta nuestra app con el flujo de n8n:",
+        code: "// Importamos Express para el servidor\nimport express from 'express';\nconst app = express();\nconst PORT = 5000;\n\n// Middleware para procesar JSON del cliente\napp.use(express.json());\n\n// Endpoint que dispara la automatización en n8n\napp.post('/generate-meal-plan', async (req, res) => {\n  const N8N_URL = 'http://localhost:5678/webhook/nutrition-plan';\n  \n  try {\n    // Enviamos los datos del usuario (macros, alergias) a n8n\n    const response = await fetch(N8N_URL, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(req.body),\n    });\n\n    const data = await response.json();\n    res.json({ success: true, details: data }); // Éxito: Plan generado\n  } catch (error) {\n    res.status(500).json({ success: false, error: 'Error en servidor' });\n  }\n});"
       }
     ]
   },
@@ -728,9 +747,9 @@ const ECOSYSTEM_DATA = {  nodejs: {
         text: "Ofrece un desarrollo más rápido, mantenible y escalable. Facilita la creación de aplicaciones complejas al dividir la interfaz en pequeñas partes lógicas, mejorando enormemente la experiencia tanto del desarrollador como del usuario final." 
       },
       { 
-        title: "Ejemplos de código:", 
-        text: "Aquí puedes ver cómo se define un componente simple con estado en React:",
-        code: "function Contador() {\n  const [clicks, setClicks] = useState(0);\n\n  return (\n    <button onClick={() => setClicks(clicks + 1)}>\n      Has hecho {clicks} clicks\n    </button>\n  );\n}"
+        title: "Lógica de Interfaz (App.jsx):", 
+        text: "Fragmento del componente principal que gestiona el estado de la vista actual y las transiciones:",
+        code: "// Hook de estado para controlar la vista actual de la app\nconst [currentView, setCurrentView] = useState('onboarding');\n\nreturn (\n  <div className=\"flex min-h-screen bg-surface\">\n    {/* AnimatePresence gestiona animaciones al desmontar componentes */}\n    <AnimatePresence mode=\"wait\">\n      <motion.div\n        key={currentView} // Cambiar la key dispara la transición\n        initial={{ opacity: 0, y: 20 }}\n        animate={{ opacity: 1, y: 0 }}\n        exit={{ opacity: 0, y: -20 }}\n      >\n        {/* Renderizado condicional basado en el estado */}\n        {currentView === 'dashboard' && <Dashboard />}\n        {currentView === 'log' && <FoodLog />}\n      </motion.div>\n    </AnimatePresence>\n  </div>\n);"
       }
     ]
   },
@@ -753,7 +772,7 @@ const ECOSYSTEM_DATA = {  nodejs: {
       { 
         title: "Authentication", 
         text: "Provee un sistema de autenticación seguro y fácil de implementar. Soporta el acceso mediante correo/contraseña, proveedores sociales como Google o Facebook, y se integra perfectamente con otros servicios de Firebase.",
-        icon: Lock
+        image: "/images/Captura3Firebase.png"
       }
 
 
@@ -771,7 +790,11 @@ const ECOSYSTEM_DATA = {  nodejs: {
     category: "🔥 Backend y Despliegue",
     logo: "/logos/Rocky_Linux_wordmark.svg.png",
     color: "#10b981",
-    details: [{ title: "Sistema Operativo", text: "Es una distribución de Linux empresarial, de código abierto y gratuita, diseñada para ser 100% compatible con Red Hat Enterprise Linux (RHEL). Es el sucesor espiritual de CentOS, ideal para servidores que requieren máxima estabilidad y seguridad." }]
+    isArchitecture: true,
+    details: [
+      { title: "Sistema Operativo", text: "Es una distribución de Linux empresarial, de código abierto y gratuita, diseñada para ser 100% compatible con Red Hat Enterprise Linux (RHEL). Es el sucesor espiritual de CentOS, ideal para servidores que requieren máxima estabilidad y seguridad." },
+      { title: "Arquitectura de Despliegue", text: "Visualización del flujo de datos y contenedores sobre el servidor Rocky Linux." }
+    ]
   },
   n8n: {
     title: "n8n",
@@ -821,8 +844,18 @@ function EcosystemGrid({ onSelect, onBack }) {
         animate={{ opacity: 1, scale: 1 }}
         className="expanded-ecosystem"
       >
-        <div className="expanded-header" style={{ justifyContent: 'flex-end', border: 'none' }}>
-          <button className="back-btn" onClick={handleBack}>
+        <div className="expanded-header" style={{ 
+          justifyContent: 'space-between', 
+          border: 'none', 
+          padding: '0 1rem 1rem 1rem',
+          position: 'relative',
+          zIndex: 1000
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img src={item.logo} alt="" style={{ height: '30px' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: item.color }}>{item.title}</h3>
+          </div>
+          <button className="back-btn" onClick={handleBack} style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
              <ChevronLeft size={18} /> Volver a cuadros
           </button>
         </div>
@@ -945,8 +978,11 @@ function EcosystemGrid({ onSelect, onBack }) {
               >
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
                   {item.details[currentSubSlide].image ? (
-                    <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(139, 115, 85, 0.1)', background: '#fff' }}>
-                      <img src={item.details[currentSubSlide].image} style={{ width: '100%', maxHeight: '400px', objectFit: 'contain', display: 'block' }} alt="Detail"/>
+                    <div style={{ width: '100%', marginBottom: '1rem' }}>
+                      <ZoomableImage 
+                        src={item.details[currentSubSlide].image} 
+                        alt={item.details[currentSubSlide].title} 
+                      />
                     </div>
                   ) : item.details[currentSubSlide].icon ? (
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px', background: 'rgba(139, 115, 85, 0.05)', borderRadius: '12px' }}>
@@ -960,7 +996,7 @@ function EcosystemGrid({ onSelect, onBack }) {
                   <h4>{item.details[currentSubSlide].title}</h4>
                   <p>{item.details[currentSubSlide].text}</p>
                   {item.details[currentSubSlide].code && (
-                    <div className="code-block" style={{ marginTop: '1rem', fontSize: '0.85rem', background: '#2C2A29', color: '#61dafb', border: '1px solid #61dafb' }}>
+                    <div className="code-block" style={{ marginTop: '0.5rem', fontSize: '0.75rem', background: '#2C2A29', color: '#61dafb', border: '1px solid #61dafb' }}>
                       <pre style={{ margin: 0 }}>{item.details[currentSubSlide].code}</pre>
                     </div>
                   )}
@@ -977,7 +1013,7 @@ function EcosystemGrid({ onSelect, onBack }) {
               className="sub-btn side-nav-btn left" 
               onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
               disabled={currentSubSlide === 0}
-              style={{ position: 'absolute', left: '-60px', top: '50%', transform: 'translateY(-50%)' }}
+              style={{ position: 'absolute', left: '-50px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <ChevronLeft />
             </button>
@@ -985,7 +1021,7 @@ function EcosystemGrid({ onSelect, onBack }) {
               className="sub-btn side-nav-btn right" 
               onClick={() => setCurrentSubSlide(prev => Math.min(item.details.length - 1, prev + 1))}
               disabled={currentSubSlide === item.details.length - 1}
-              style={{ position: 'absolute', right: '-60px', top: '50%', transform: 'translateY(-50%)' }}
+              style={{ position: 'absolute', right: '-50px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <ChevronRight />
             </button>
@@ -1116,39 +1152,47 @@ const slidesData = [
         </div>
 
         <motion.div variants={itemVariants} className="info-card" style={{ marginTop: '0.5rem' }}>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Código Interactivo (pasa el cursor):</h3>
-          <div className="code-block" style={{ fontSize: '1rem', lineHeight: 1.6 }}>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Arquitectura de Código:</h3>
+          <div className="code-block" style={{ fontSize: '0.85rem', lineHeight: 1.4, background: '#1e1e1e', color: '#d4d4d4' }}>
             {/* HTML Part */}
-            <div style={{ color: '#888', fontStyle: 'italic', marginBottom: '4px' }}>// index.html</div>
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// Estructura (HTML5)</div>
             <div style={{ paddingLeft: '1rem' }}>
-              {'<'}
-              <CodeTooltip tooltipText="Etiqueta de apertura">div</CodeTooltip> 
-              {' '}
-              <CodeTooltip tooltipText="Atributo de clase">class</CodeTooltip>="container"{'>'}
+              <span style={{ color: '#808080' }}>{'<'}</span>
+              <span style={{ color: '#569cd6' }}>div</span> 
+              <span style={{ color: '#9cdcfe' }}> id</span>=<span style={{ color: '#ce9178' }}>"root"</span>
+              <span style={{ color: '#808080' }}>{'>'}{'</'}</span>
+              <span style={{ color: '#569cd6' }}>div</span>
+              <span style={{ color: '#808080' }}>{'>'}</span>
+              <CodeTooltip tooltipText="Punto de montaje de React"> [React Entry]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '2rem' }}>
-              {'<'}
-              <CodeTooltip tooltipText="Etiqueta de encabezado">h1</CodeTooltip>
-              {'>'}Hola Mundo{'</'}
-              <CodeTooltip tooltipText="Etiqueta de cierre">h1</CodeTooltip>
-              {'>'}
+            <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>
+              <span style={{ color: '#808080' }}>{'<'}</span>
+              <span style={{ color: '#569cd6' }}>script</span> 
+              <span style={{ color: '#9cdcfe' }}> src</span>=<span style={{ color: '#ce9178' }}>"/main.tsx"</span>
+              <span style={{ color: '#808080' }}>{'>'}{'</'}</span>
+              <span style={{ color: '#569cd6' }}>script</span>
+              <span style={{ color: '#808080' }}>{'>'}</span>
             </div>
-            <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>{'</div>'}</div>
 
             {/* CSS Part */}
-            <div style={{ color: '#888', fontStyle: 'italic', marginBottom: '4px' }}>// styles.css</div>
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// Estilos y Variables (CSS3)</div>
             <div style={{ paddingLeft: '1rem' }}>
-              <CodeTooltip tooltipText="Selector de clase">.container</CodeTooltip> {' { '}
+              <span style={{ color: '#d16969' }}>@theme</span> {' {'}
             </div>
             <div style={{ paddingLeft: '2rem' }}>
-              <CodeTooltip tooltipText="Propiedad CSS">background</CodeTooltip>: #fff;
+              <span style={{ color: '#9cdcfe' }}>--color-primary</span>: <span style={{ color: '#ce9178' }}>#0f5238</span>;
+              <CodeTooltip tooltipText="Variable global de color"> [Primary]</CodeTooltip>
             </div>
             <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>{'}'}</div>
 
-            {/* TS Part */}
-            <div style={{ color: '#888', fontStyle: 'italic', marginBottom: '4px' }}>// script.js</div>
+            {/* JS Part */}
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// Lógica de Estado (ES6+)</div>
             <div style={{ paddingLeft: '1rem' }}>
-              const <CodeTooltip tooltipText="Nombre de variable">user</CodeTooltip> = "Agustin";
+              <span style={{ color: '#569cd6' }}>const</span> [user, setUser] = <span style={{ color: '#dcdcaa' }}>useState</span>(<span style={{ color: '#569cd6' }}>null</span>);
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#569cd6' }}>const</span> <span style={{ color: '#dcdcaa' }}>login</span> = (d) ={'>'} <span style={{ color: '#dcdcaa' }}>setUser</span>(d);
+              <CodeTooltip tooltipText="Función de flecha moderna"> [Arrow Fn]</CodeTooltip>
             </div>
           </div>
         </motion.div>
@@ -1208,9 +1252,56 @@ const slidesData = [
       </div>
 
     )
+  },
+  {
+    id: 5,
+    title: "Arquitectura de Servidores",
+    subtitle: "Infraestructura y Despliegue",
+    logo: "/logos/Rocky_Linux_wordmark.svg",
+    content: (
+      <div style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
+        <ServerArchitecture />
+      </div>
+    )
+  },
+  {
+    id: 6,
+    title: "¡Gracias!",
+    subtitle: "Seminario de Actualización 2026",
+    content: (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', gap: '2rem' }}>
+        <motion.div
+          animate={{ 
+            scale: [1, 1.05, 1],
+            rotate: [0, 5, -5, 0]
+          }}
+          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          style={{ 
+            background: 'rgba(212, 163, 115, 0.1)', 
+            padding: '4rem', 
+            borderRadius: '50%',
+            border: '2px solid rgba(212, 163, 115, 0.2)',
+            boxShadow: '0 20px 50px rgba(139, 115, 85, 0.1)'
+          }}
+        >
+          <Rocket size={120} color="#D4A373" />
+        </motion.div>
+        <div>
+          <h2 style={{ fontSize: '4rem', fontWeight: 800, color: '#8B7355', marginBottom: '0.5rem' }}>¿Preguntas?</h2>
+          <p style={{ fontSize: '1.5rem', color: '#5A5650' }}>Muchas gracias por su atención</p>
+        </div>
+        
+        <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
+           <div className="carousel-item" style={{ fontSize: '1rem', padding: '0.5rem 1.5rem' }}>
+             <Activity size={18} style={{ marginRight: '8px' }} /> Nutrición Consciente
+           </div>
+           <div className="carousel-item" style={{ fontSize: '1rem', padding: '0.5rem 1.5rem' }}>
+             <Globe size={18} style={{ marginRight: '8px' }} /> Proyecto 2026
+           </div>
+        </div>
+      </div>
+    )
   }
-
-
 ];
 
 
@@ -1274,17 +1365,19 @@ export default function App() {
         <div 
           className={`nav-zone nav-left ${page === 0 || selectedEcoItem ? 'disabled' : ''}`} 
           onClick={() => paginate(-1)}
+          style={{ zIndex: selectedEcoItem ? -1 : 200 }}
         >
           <div className="nav-hint">
-            <ChevronLeft size={48} />
+            <ChevronLeft size={32} />
           </div>
         </div>
         <div 
           className={`nav-zone nav-right ${page === slidesData.length - 1 || selectedEcoItem ? 'disabled' : ''}`} 
           onClick={() => paginate(1)}
+          style={{ zIndex: selectedEcoItem ? -1 : 200 }}
         >
           <div className="nav-hint">
-            <ChevronRight size={48} />
+            <ChevronRight size={32} />
           </div>
         </div>
       </div>
