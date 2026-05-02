@@ -45,7 +45,7 @@ body {
 }
 
 .slide {
-  width: 100%;
+  width: 95%;
   max-width: 1200px;
   height: 90%;
   max-height: 850px;
@@ -54,12 +54,12 @@ body {
   -webkit-backdrop-filter: blur(15px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 32px;
-  padding: 2rem;
+  padding: 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow-y: auto;
+  overflow: auto; /* Allow scrolling if content overflows */
   box-shadow: 0 40px 100px rgba(139, 115, 85, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   position: absolute;
   will-change: transform, opacity;
@@ -92,15 +92,15 @@ body {
 .slide-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .slide-title {
-  font-size: 4.5rem;
+  font-size: 2.2rem;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.1rem;
   background: linear-gradient(135deg, #8B7355 0%, #D4A373 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -109,32 +109,34 @@ body {
 }
 
 .slide-subtitle {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   text-align: center;
   color: var(--text-muted);
   font-weight: 400;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .slide-content {
-  font-size: 1.5rem;
-  line-height: 1.8;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  line-height: 1.6;
   font-family: 'Inter', sans-serif;
   color: var(--text-muted);
+  width: 100%;
 }
 
 .logo-image {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
 .grid-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
   margin-top: 2rem;
+  width: 100%;
 }
 
 .info-card {
@@ -258,7 +260,7 @@ body {
     height: 95%;
   }
   .slide-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
   .nav-zone {
     width: 10%;
@@ -267,41 +269,38 @@ body {
 
 @media (max-width: 768px) {
   .slide {
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
     border-radius: 20px;
-    height: 90%;
+    height: 95%;
+    width: 95%;
   }
   .slide-title {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
   }
   .slide-subtitle {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
   }
   .slide-header {
     flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
   }
   .logo-image {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
   }
   .nav-zone {
-    width: 20%;
+    width: 15%;
     background: transparent !important;
   }
   .nav-hint svg {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
   }
   .grid-content {
     grid-template-columns: 1fr !important;
     gap: 1rem;
-  }
-  .carousel-item {
-    font-size: 1.1rem;
-    padding: 0.8rem 1.5rem;
   }
   .sub-slide-card {
     padding: 1.5rem;
@@ -312,6 +311,33 @@ body {
   }
   .sub-slide-card p {
     font-size: 1rem;
+  }
+  .presentation-toolbar {
+    left: 1rem !important;
+    bottom: 1rem !important;
+    padding: 8px 12px !important;
+    scale: 0.85;
+    transform-origin: left bottom;
+  }
+}
+
+@media (max-width: 480px) {
+  .slide {
+    padding: 1rem 0.5rem;
+  }
+  .slide-title {
+    font-size: 1.5rem;
+  }
+  .back-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  .sub-controls {
+    gap: 1rem;
+  }
+  .sub-btn {
+    width: 35px;
+    height: 35px;
   }
 }
 
@@ -655,6 +681,27 @@ body {
     radial-gradient(rgba(255, 109, 90, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
   background-position: 0 0, 10px 10px;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.n8n-workflow-canvas::-webkit-scrollbar {
+  height: 6px;
+}
+.n8n-workflow-canvas::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+.n8n-workflow-canvas::-webkit-scrollbar-thumb {
+  background: rgba(255, 109, 90, 0.3);
+  border-radius: 10px;
+}
+
+@media (max-width: 850px) {
+  .n8n-workflow-canvas {
+    border-radius: 12px;
+  }
 }
 
 .n8n-node-main {
@@ -712,4 +759,13 @@ body {
     linear-gradient(rgba(139, 115, 85, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(139, 115, 85, 0.03) 1px, transparent 1px);
   background-size: 30px 30px;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

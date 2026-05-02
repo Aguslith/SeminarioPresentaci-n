@@ -1,7 +1,277 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database, Lock, Link, Globe, Sparkles, CheckCircle2, Activity, Server, Monitor, HardDrive, Mail, Shield, Share2, Brain, Code, FileText, Layout } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database, Lock, Link, Globe, Sparkles, CheckCircle2, Activity, Server, Monitor, HardDrive, Mail, Shield, Share2, Brain, Code, FileText, Layout, RefreshCcw, Search, ZoomIn, MousePointer2, PenTool, Eraser, Wand2, Trash2 } from 'lucide-react';
 import './index.css';
+
+const PresentationTools = ({ isVisible }) => {
+  const [activeTool, setActiveTool] = useState(null); // 'laser', 'brush'
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [laserPos, setLaserPos] = useState({ x: 0, y: 0 });
+  const [isDrawing, setIsDrawing] = useState(false);
+  const canvasRef = useRef(null);
+
+  // Reset tools when visibility changes
+  useEffect(() => {
+    if (!isVisible) {
+      setActiveTool(null);
+      setZoomLevel(1);
+      clearCanvas();
+    }
+  }, [isVisible]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (canvasRef.current) {
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight;
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleWheel = (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        setZoomLevel(prev => {
+          const newZoom = Math.min(Math.max(1, prev + (e.deltaY < 0 ? 0.1 : -0.1)), 3);
+          return parseFloat(newZoom.toFixed(1));
+        });
+      }
+    };
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, []);
+
+  useEffect(() => {
+    if (activeTool !== 'laser') return;
+    const handleMouseMove = (e) => setLaserPos({ x: e.clientX, y: e.clientY });
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [activeTool]);
+
+  const startDrawing = (e) => {
+    if (activeTool !== 'brush') return;
+    setIsDrawing(true);
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(e.clientX, e.clientY);
+  };
+
+  const draw = (e) => {
+    if (!isDrawing || activeTool !== 'brush') return;
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.lineTo(e.clientX, e.clientY);
+    ctx.strokeStyle = '#ff6d5a';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+  };
+
+  const clearCanvas = () => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <>
+      <div className="presentation-toolbar" style={{
+        position: 'fixed',
+        bottom: '2.5rem',
+        left: '2.5rem',
+        zIndex: 5000,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        background: 'rgba(15, 15, 15, 0.95)',
+        backdropFilter: 'blur(20px)',
+        padding: '10px 18px',
+        borderRadius: '100px',
+        border: '1px solid rgba(255,255,255,0.15)',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+        color: 'white'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Wand2 size={16} color="#ff6d5a" />
+          <span style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.8 }}>Herramientas</span>
+        </div>
+        
+        <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
+
+        <button 
+          onClick={() => setActiveTool(activeTool === 'laser' ? null : 'laser')}
+          style={{ 
+            background: activeTool === 'laser' ? '#ff6d5a' : 'rgba(255,255,255,0.05)', 
+            border: 'none', color: 'white', padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'all 0.3s' 
+          }}
+          title="Puntero Láser"
+        >
+          <MousePointer2 size={18} />
+        </button>
+
+        <button 
+          onClick={() => setActiveTool(activeTool === 'brush' ? null : 'brush')}
+          style={{ 
+            background: activeTool === 'brush' ? '#ff6d5a' : 'rgba(255,255,255,0.05)', 
+            border: 'none', color: 'white', padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'all 0.3s' 
+          }}
+          title="Pincel para dibujar"
+        >
+          <PenTool size={18} />
+        </button>
+
+        {activeTool === 'brush' && (
+          <button 
+            onClick={clearCanvas}
+            style={{ background: 'rgba(255,109,90,0.1)', border: 'none', color: '#ff6d5a', padding: '10px', borderRadius: '50%', cursor: 'pointer' }}
+            title="Borrar anotaciones"
+          >
+            <Eraser size={18} />
+          </button>
+        )}
+
+        <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.75rem', fontWeight: 600 }}>
+          <ZoomIn size={16} />
+          <span>{Math.round(zoomLevel * 100)}%</span>
+          <span style={{ opacity: 0.5, fontSize: '0.6rem' }}>(Ctrl + Rueda)</span>
+        </div>
+
+        {zoomLevel > 1 && (
+          <button onClick={() => setZoomLevel(1)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '5px 12px', borderRadius: '50px', fontSize: '0.65rem', cursor: 'pointer' }}>
+            Reset
+          </button>
+        )}
+      </div>
+
+      {/* Global Zoom Effect */}
+      <style>{`
+        .slide-container { 
+          transform: scale(${zoomLevel}); 
+          transform-origin: center center;
+          transition: transform 0.1s ease-out; 
+        }
+        body { overflow: hidden; cursor: ${activeTool === 'laser' ? 'none' : 'auto'}; }
+      `}</style>
+
+      {/* Laser Pointer */}
+      <AnimatePresence>
+        {activeTool === 'laser' && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1, x: laserPos.x - 10, y: laserPos.y - 10 }}
+            exit={{ opacity: 0, scale: 0 }}
+            style={{
+              position: 'fixed',
+              width: '24px',
+              height: '24px',
+              background: 'radial-gradient(circle, rgba(255,109,90,1) 0%, rgba(255,109,90,0.4) 50%, rgba(255,109,90,0) 80%)',
+              borderRadius: '50%',
+              boxShadow: '0 0 20px #ff6d5a, 0 0 40px #ff6d5a',
+              pointerEvents: 'none',
+              zIndex: 6000
+            }}
+          >
+             <motion.div
+              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ repeat: Infinity, duration: 1 }}
+              style={{ width: '100%', height: '100%', borderRadius: '50%', border: '2px solid #ff6d5a' }}
+             />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Canvas Overlay */}
+      <canvas
+        ref={canvasRef}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        onMouseDown={startDrawing}
+        onMouseMove={draw}
+        onMouseUp={() => setIsDrawing(false)}
+        onMouseOut={() => setIsDrawing(false)}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: activeTool === 'brush' ? 4000 : -1,
+          pointerEvents: activeTool === 'brush' ? 'all' : 'none',
+          cursor: activeTool === 'brush' ? 'crosshair' : 'default'
+        }}
+      />
+    </>
+  );
+};
+
+const ZoomableImage = ({ src, alt }) => {
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.pageX - left - window.scrollX) / width) * 100;
+    const y = ((e.pageY - top - window.scrollY) / height) * 100;
+    setMousePos({ x, y });
+  };
+
+  return (
+    <div 
+      className="zoom-container"
+      onMouseEnter={() => setIsZoomed(true)}
+      onMouseLeave={() => setIsZoomed(false)}
+      onMouseMove={handleMouseMove}
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '420px',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        cursor: 'zoom-in',
+        backgroundColor: '#fff',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+        border: '1px solid rgba(0,0,0,0.05)'
+      }}
+    >
+      <motion.img
+        src={src}
+        alt={alt}
+        animate={{ 
+          scale: isZoomed ? 2 : 1,
+          transformOrigin: `${mousePos.x}% ${mousePos.y}%`
+        }}
+        transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain'
+        }}
+      />
+      {!isZoomed && (
+        <div style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          background: 'rgba(255,255,255,0.8)',
+          padding: '8px',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+          pointerEvents: 'none'
+        }}>
+          <Search size={20} color="#8B7355" />
+        </div>
+      )}
+    </div>
+  );
+};
 
 const CodeTooltip = ({ children, tooltipText }) => {
   return (
@@ -54,84 +324,111 @@ const slideVariants = {
   })
 };
 
-const N8nNode = ({ icon: Icon, title, description, color, x, y, delay }) => {
+
+
+
+const N8nNode = ({ icon: Icon, title, description, color, x, y, delay, characteristics = [] }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8, x: x - 50, y }}
-      animate={{ opacity: 1, scale: 1, x, y }}
-      transition={{ delay, duration: 0.5 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, duration: 0.5, ease: "easeOut" }}
       style={{
         position: 'absolute',
-        cursor: 'pointer',
-        zIndex: isHovered ? 10 : 1
+        left: `${x}px`,
+        top: `${y}px`,
+        zIndex: isHovered ? 100 : 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '60px'
       }}
     >
-      <div className="n8n-node-main" style={{ 
-        background: 'white', 
-        padding: '0.8rem', 
-        borderRadius: '12px', 
-        boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-        border: `2px solid ${color}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '50px',
-        height: '50px'
-      }}>
+      <motion.div 
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        whileHover={{ scale: 1.1, y: -2 }}
+        style={{ 
+          background: '#1a1a1a', 
+          padding: '10px', 
+          borderRadius: '12px', 
+          border: `2px solid ${isHovered ? color : '#333'}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '48px',
+          height: '48px',
+          boxShadow: isHovered ? `0 0 20px ${color}44` : '0 4px 10px rgba(0,0,0,0.3)',
+          transition: 'border-color 0.2s ease',
+          cursor: 'pointer',
+          position: 'relative'
+        }}
+      >
         <Icon size={24} color={color} />
-      </div>
+        
+        {/* Connection points */}
+        <div style={{ position: 'absolute', left: '-4px', top: '50%', transform: 'translateY(-50%)', width: '6px', height: '6px', borderRadius: '50%', background: '#444', border: '1px solid #666' }} />
+        <div style={{ position: 'absolute', right: '-4px', top: '50%', transform: 'translateY(-50%)', width: '6px', height: '6px', borderRadius: '50%', background: '#444', border: '1px solid #666' }} />
+      </motion.div>
+      
       <div style={{ 
-        position: 'absolute',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '90px',
         textAlign: 'center', 
-        marginTop: '0.4rem', 
+        marginTop: '6px', 
         fontWeight: 700, 
-        fontSize: '0.65rem', 
-        color: '#444',
-        lineHeight: 1.1
+        fontSize: '0.6rem', 
+        color: isHovered ? color : '#bbb',
+        width: '80px',
+        lineHeight: 1.1,
+        transition: 'color 0.2s ease',
+        pointerEvents: 'none'
       }}>{title}</div>
 
       <AnimatePresence>
         {isHovered && (
           <motion.div
-            initial={{ opacity: 0, y: 10, rotateX: -90 }}
-            animate={{ opacity: 1, y: -100, rotateX: 0 }}
-            exit={{ opacity: 0, y: 10, rotateX: -90 }}
-            transition={{ type: 'spring', damping: 15 }}
+            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.9 }}
             style={{
               position: 'absolute',
-              bottom: '100%',
+              bottom: '65px',
               left: '50%',
               transform: 'translateX(-50%)',
-              background: 'white',
-              padding: '1rem',
-              borderRadius: '12px',
+              background: 'rgba(25, 25, 25, 0.98)',
+              backdropFilter: 'blur(10px)',
+              padding: '12px',
+              borderRadius: '14px',
               width: '200px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+              boxShadow: '0 15px 40px rgba(0,0,0,0.6)',
               border: `1px solid ${color}`,
               pointerEvents: 'none',
-              transformOrigin: 'bottom center'
+              zIndex: 300,
+              textAlign: 'left'
             }}
           >
-            <h5 style={{ margin: 0, color: color, fontSize: '1rem', marginBottom: '0.5rem' }}>{title}</h5>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#666', lineHeight: 1.4 }}>{description}</p>
-            <div style={{ 
-              position: 'absolute', 
-              top: '100%', 
-              left: '50%', 
-              transform: 'translateX(-50%)',
-              width: 0,
-              height: 0,
-              borderLeft: '10px solid transparent',
-              borderRight: '10px solid transparent',
-              borderTop: `10px solid white`
-            }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <div style={{ background: `${color}22`, padding: '4px', borderRadius: '6px' }}>
+                <Icon size={14} color={color} />
+              </div>
+              <h5 style={{ margin: 0, color: color, fontSize: '0.85rem', fontWeight: 800 }}>{title}</h5>
+            </div>
+            <p style={{ margin: '0 0 10px 0', fontSize: '0.75rem', color: '#eee', fontWeight: 500, lineHeight: 1.4 }}>{description}</p>
+            
+            {characteristics.length > 0 && (
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '8px' }}>
+                <div style={{ fontSize: '0.55rem', color: '#777', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px', fontWeight: 800 }}>CARACTERÍSTICAS</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                  {characteristics.map((c, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.65rem', color: '#ccc' }}>
+                      <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: color }} />
+                      {c}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -143,129 +440,112 @@ const N8nWorkflow = () => {
   return (
     <div className="n8n-workflow-canvas responsive-diagram" style={{ 
       width: '100%', 
-      height: '380px', 
-      background: 'rgba(255,255,255,0.8)', 
-      borderRadius: '20px', 
+      minWidth: '1200px',
+      height: '420px', 
+      background: '#0a0a0a', 
+      borderRadius: '24px', 
       position: 'relative',
-      overflow: 'hidden',
-      border: '1px dashed #ff6d5a',
-      padding: '0',
-      transformOrigin: 'top left'
+      border: '1px solid #1a1a1a',
+      margin: '0 auto',
+      boxShadow: '0 20px 50px rgba(0,0,0,0.4), inset 0 0 60px rgba(255,109,90,0.05)'
     }}>
+      {/* Grid Pattern Background */}
+      <div style={{ 
+        position: 'absolute', 
+        inset: 0, 
+        backgroundImage: 'radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px)', 
+        backgroundSize: '24px 24px',
+      }} />
+
       <svg style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
+        {/* Main horizontal flow line */}
         <motion.path
-          d="M 50 160 L 850 160 M 320 160 L 320 260 M 320 260 L 270 310 M 320 260 L 370 310"
+          d="M 50 120 L 1150 120"
           fill="none"
-          stroke="#ff6d5a"
+          stroke="#2a2a2a"
           strokeWidth="2"
-          strokeDasharray="8,4"
+          strokeDasharray="4 4"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 2, ease: "easeInOut" }}
         />
+        
+        {/* Labels on lines */}
+        <text x="90" y="110" fill="#666" fontSize="8" fontFamily="Inter" fontWeight="800">POST</text>
+        <text x="800" y="165" fill="#666" fontSize="8" textAnchor="middle" fontFamily="Inter" fontWeight="800">HTML to PDF</text>
+        <text x="940" y="165" fill="#666" fontSize="8" textAnchor="middle" fontFamily="Inter" fontWeight="800">send: message</text>
+
+        {/* AI Agent Sub-branches */}
+        {/* Model Connection (Left Pin) */}
+        <motion.path
+          d="M 450 145 L 450 190 Q 450 210 380 210 L 380 240"
+          fill="none"
+          stroke="#444"
+          strokeWidth="1.5"
+          strokeDasharray="4 2"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1, delay: 1 }}
+        />
+        {/* Parser Connection (Right Pin) */}
+        <motion.path
+          d="M 480 145 L 480 190 Q 480 210 580 210 L 580 240"
+          fill="none"
+          stroke="#444"
+          strokeWidth="1.5"
+          strokeDasharray="4 2"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1, delay: 1.2 }}
+        />
+
+        {/* Labels for sub-lines */}
+        <text x="415" y="225" fill="#666" fontSize="9" textAnchor="middle" fontFamily="Inter" fontWeight="600">Model</text>
+        <text x="545" y="225" fill="#666" fontSize="9" textAnchor="middle" fontFamily="Inter" fontWeight="600">Output Parser</text>
       </svg>
+
+      {/* Main Row Nodes (y=100 approx) */}
+      <N8nNode x={20} y={95} icon={Zap} title="Webhook Trigger" description="Inicio del flujo" color="#ff6d5a" delay={0.1} />
       
-      <N8nNode 
-        x={30} y={135} 
-        icon={Zap} 
-        title="Webhook Trigger" 
-        description="Punto de inicio: Recibe la petición con los datos del usuario."
-        color="#ff6d5a"
-        delay={0.1}
-      />
+      <N8nNode x={140} y={95} icon={Code} title="Calculate Nutrition" description="Lógica matemática" color="#4a90e2" delay={0.2} />
+      
+      <N8nNode x={270} y={95} icon={Code} title="Filter Foods by Allergies" description="Exclusión personalizada" color="#f39c12" delay={0.3} />
+      
+      {/* Generate Meal Plan (AI Node) */}
+      <N8nNode x={435} y={95} icon={Sparkles} title="Generate Meal Plan" description="Orquestación IA" color="#9b59b6" delay={0.4} />
+      
+      {/* Pins labels below AI Agent */}
+      <div style={{ position: 'absolute', top: '160px', left: '435px', transform: 'translateX(-50%)', display: 'flex', gap: '20px', color: '#444', fontSize: '8px', fontWeight: 700, pointerEvents: 'none' }}>
+        <span>Chat ModeMemory</span>
+        <span>TooOutput Parser</span>
+      </div>
 
-      <N8nNode 
-        x={120} y={135} 
-        icon={Activity} 
-        title="Calculate Nutrition" 
-        description="Lógica JS: Calcula el requerimiento calórico y macros."
-        color="#4a90e2"
-        delay={0.2}
-      />
+      {/* Sub-nodes */}
+      <N8nNode x={345} y={240} icon={Brain} title="OpenAI Model" description="GPT-4o Engine" color="#10a37f" delay={1} />
+      <N8nNode x={545} y={240} icon={Code} title="Structured Output Parser" description="Validador JSON" color="#2ecc71" delay={1.2} />
 
-      <N8nNode 
-        x={220} y={135} 
-        icon={Shield} 
-        title="Filter Allergies" 
-        description="Filtro: Elimina alimentos no permitidos según perfil."
-        color="#f39c12"
-        delay={0.3}
-      />
+      <N8nNode x={650} y={95} icon={Code} title="Code in JavaScript" description="Normalización" color="#f1c40f" delay={0.5} />
+      
+      <N8nNode x={770} y={95} icon={Code} title="Generate HTML Report" description="Diseño visual" color="#e67e22" delay={0.6} />
+      
+      <N8nNode x={890} y={95} icon={FileText} title="Convert HTML to PDF1" description="Exportación PDF" color="#e74c3c" delay={0.7} />
+      
+      <N8nNode x={1010} y={95} icon={Mail} title="Send Email" description="Entrega Gmail" color="#d44638" delay={0.8} />
+      
+      <N8nNode x={1130} y={95} icon={Zap} title="Respond to Webhook" description="Éxito final" color="#27ae60" delay={0.9} />
 
-      <N8nNode 
-        x={320} y={135} 
-        icon={Sparkles} 
-        title="Generate Meal Plan" 
-        description="Nodo Agente: Orquesta la creación del plan semanal."
-        color="#9b59b6"
-        delay={0.4}
-      />
-
-      {/* AI Sub-nodes */}
-      <N8nNode 
-        x={250} y={285} 
-        icon={Brain} 
-        title="OpenAI Model" 
-        description="IA: Procesa el prompt y crea recetas creativas."
-        color="#10a37f"
-        delay={0.5}
-      />
-      <N8nNode 
-        x={390} y={285} 
-        icon={Database} 
-        title="Output Parser" 
-        description="Estructurador: Convierte respuesta en JSON."
-        color="#2ecc71"
-        delay={0.6}
-      />
-
-      <N8nNode 
-        x={450} y={135} 
-        icon={Code} 
-        title="JS Post-Process" 
-        description="Formateo: Limpia y prepara los datos finales."
-        color="#f1c40f"
-        delay={0.7}
-      />
-
-      <N8nNode 
-        x={550} y={135} 
-        icon={Layout} 
-        title="HTML Report" 
-        description="Diseño: Genera la plantilla visual con estilos CSS."
-        color="#e67e22"
-        delay={0.8}
-      />
-
-      <N8nNode 
-        x={650} y={135} 
-        icon={FileText} 
-        title="HTML to PDF" 
-        description="Conversión: Transforma el reporte en un PDF."
-        color="#e74c3c"
-        delay={0.9}
-      />
-
-      <N8nNode 
-        x={750} y={135} 
-        icon={Mail} 
-        title="Send Email" 
-        description="Entrega: Envía el PDF adjunto al correo."
-        color="#d44638"
-        delay={1.0}
-      />
-
-      <N8nNode 
-        x={850} y={135} 
-        icon={CheckCircle2} 
-        title="Respond" 
-        description="Cierre: Envía confirmación al frontend."
-        color="#27ae60"
-        delay={1.1}
-      />
-
-      <div style={{ position: 'absolute', top: '1rem', right: '1rem', fontSize: '0.7rem', color: '#ff6d5a', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
-        Workflow n8n: Automatización IA
+      <div style={{ 
+        position: 'absolute', 
+        top: '1.2rem', 
+        left: '1.2rem', 
+        fontSize: '0.65rem', 
+        color: '#ff6d5a', 
+        fontWeight: 800, 
+        textTransform: 'uppercase', 
+        letterSpacing: '1.5px',
+        opacity: 0.8
+      }}>
+        n8n Workflow: IA Engine
       </div>
     </div>
   );
@@ -425,7 +705,7 @@ const ECOSYSTEM_DATA = {  nodejs: {
       { 
         title: "Ejemplos de código:", 
         text: "Aquí tienes un ejemplo básico de cómo crear un servidor web con Express:",
-        code: "const express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.send('Servidor activo');\n});\n\napp.listen(3000, () => {\n  console.log('Puerto 3000');\n});"
+        code: "const express = require('express');\nconst app = express();\n\n// Endpoints de Autenticación\napp.post('/login', (req, res) => { ... });\napp.post('/register', (req, res) => { ... });\n\napp.listen(5000, () => {\n  console.log('Puerto 5000');\n});"
       }
     ]
   },
@@ -466,15 +746,17 @@ const ECOSYSTEM_DATA = {  nodejs: {
         image: "/images/Captura1firebase.png"
       },
       { 
-        title: "Estructura de Documentos", 
-        text: "Detalle de los campos de datos (string, number, boolean). Permite una estructura flexible que evoluciona con el desarrollo de la aplicación.",
+        title: "Firestore", 
+        text: "Es la base de datos NoSQL en la nube de Firebase. Almacena datos en documentos y colecciones, permitiendo consultas potentes y sincronización en tiempo real entre todos los clientes conectados.",
         image: "/images/Captura2Firebase.png"
       },
       { 
-        title: "Consola de Gestión", 
-        text: "Interfaz administrativa para monitorear el estado de la base de datos y realizar cambios manuales de forma segura en tiempo real.",
-        image: "/images/Captura3Firebase.png"
+        title: "Authentication", 
+        text: "Provee un sistema de autenticación seguro y fácil de implementar. Soporta el acceso mediante correo/contraseña, proveedores sociales como Google o Facebook, y se integra perfectamente con otros servicios de Firebase.",
+        icon: Lock
       }
+
+
     ]
   },
   docker: {
@@ -497,17 +779,29 @@ const ECOSYSTEM_DATA = {  nodejs: {
     logo: "/logos/N8n-logo-new.svg.png",
     color: "#ff6d5a",
     isWorkflow: true,
-    details: [{ 
-      title: "Automatización de Dieta con IA", 
-      text: "Este flujo avanzado conecta el frontend con OpenAI. Procesa los requerimientos nutricionales calculados, genera un plan de comidas personalizado mediante IA, lo convierte en un reporte HTML/PDF profesional y lo entrega automáticamente por email." 
-    }]
+    details: [
+      { 
+        title: "Arquitectura del Flujo", 
+        text: "Diagrama interactivo de la automatización completa en n8n." 
+      },
+      { image: "/images/n8n/imagenn8n1.jpeg", title: "Paso 1: Webhook de Entrada" },
+      { image: "/images/n8n/imagenn8n2.jpeg", title: "Paso 2: Procesamiento de Datos" },
+      { image: "/images/n8n/imagenn8n3.jpeg", title: "Paso 3: Lógica Nutricional" },
+      { image: "/images/n8n/imagenn8n4.jpeg", title: "Paso 4: Orquestación IA" },
+      { image: "/images/n8n/imagenn8n5.jpeg", title: "Paso 5: Agente OpenAI" },
+      { image: "/images/n8n/imagenn8n6.jpeg", title: "Paso 6: Parser de Resultados" },
+      { image: "/images/n8n/imagenn8n7.jpeg", title: "Paso 7: Generador de Reporte" },
+      { image: "/images/n8n/imagenn8n8.jpeg", title: "Paso 8: Conversión a PDF" },
+      { image: "/images/n8n/imagenn8n9.jpeg", title: "Paso 9: Notificación Email" }
+    ]
   }
+
+
 };
 
 function EcosystemGrid({ onSelect, onBack }) {
   const [selected, setSelected] = useState(null);
   const [currentSubSlide, setCurrentSubSlide] = useState(0);
-
   const handleSelect = (key) => {
     setSelected(key);
     onSelect(ECOSYSTEM_DATA[key]);
@@ -536,16 +830,75 @@ function EcosystemGrid({ onSelect, onBack }) {
         <div className="sub-slides-container">
           <AnimatePresence mode="wait">
             {item.isWorkflow ? (
-              <motion.div
-                key="workflow"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                style={{ width: '100%', maxWidth: '900px' }}
-              >
-                <N8nWorkflow />
-              </motion.div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%' }}>
+                <AnimatePresence mode="wait">
+                  {currentSubSlide === 0 ? (
+                    <motion.div
+                      key="workflow-diagram"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      style={{ width: '100%', margin: '0.5rem 0' }}
+                    >
+                      <N8nWorkflow />
+                    </motion.div>
+                  ) : (
+                     <motion.div
+                      key={currentSubSlide}
+                      initial={{ x: 50, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: -50, opacity: 0 }}
+                      style={{ width: '100%', maxWidth: '900px' }}
+                    >
+                      <ZoomableImage 
+                        src={item.details[currentSubSlide].image} 
+                        alt={item.details[currentSubSlide].title} 
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                
+                <div className="sub-controls" style={{ marginTop: '0.2rem' }}>
+                  <button 
+                    className="sub-btn" 
+                    onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
+                    disabled={currentSubSlide === 0}
+                  >
+                    <ChevronLeft />
+                  </button>
+                  <div className="sub-dots">
+                    {item.details.map((_, i) => (
+                      <div key={i} className={`dot ${i === currentSubSlide ? 'active' : ''}`} style={{ backgroundColor: i === currentSubSlide ? item.color : '#ccc' }} />
+                    ))}
+                  </div>
+                  <button 
+                    className="sub-btn" 
+                    onClick={() => setCurrentSubSlide(prev => Math.min(item.details.length - 1, prev + 1))}
+                    disabled={currentSubSlide === item.details.length - 1}
+                  >
+                    <ChevronRight />
+                  </button>
+                </div>
+
+                {item.details[currentSubSlide].image && (
+                   <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{ 
+                      textAlign: 'center', 
+                      marginTop: '0.5rem', 
+                      color: '#888', 
+                      fontSize: '0.9rem', 
+                      fontWeight: 600,
+                      padding: '0 1rem'
+                    }}
+                   >
+                     {item.details[currentSubSlide].title}
+                   </motion.div>
+                )}
+              </div>
             ) : item.isArchitecture ? (
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
                 <motion.div
                   key="arch"
@@ -591,11 +944,19 @@ function EcosystemGrid({ onSelect, onBack }) {
                 style={{ borderLeft: `6px solid ${item.color}` }}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-                  {item.details[currentSubSlide].image && (
+                  {item.details[currentSubSlide].image ? (
                     <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(139, 115, 85, 0.1)', background: '#fff' }}>
                       <img src={item.details[currentSubSlide].image} style={{ width: '100%', maxHeight: '400px', objectFit: 'contain', display: 'block' }} alt="Detail"/>
                     </div>
-                  )}
+                  ) : item.details[currentSubSlide].icon ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px', background: 'rgba(139, 115, 85, 0.05)', borderRadius: '12px' }}>
+                      {(() => {
+                        const Icon = item.details[currentSubSlide].icon;
+                        return <Icon size={80} color={item.color} />;
+                      })()}
+                    </div>
+                  ) : null}
+
                   <h4>{item.details[currentSubSlide].title}</h4>
                   <p>{item.details[currentSubSlide].text}</p>
                   {item.details[currentSubSlide].code && (
@@ -668,7 +1029,7 @@ function EcosystemGrid({ onSelect, onBack }) {
   }
 
   return (
-    <div className="grid-content" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem' }}>
+    <div className="grid-content" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
       {Object.entries(ECOSYSTEM_DATA).map(([key, item]) => (
         <motion.div 
           key={key}
@@ -686,6 +1047,7 @@ function EcosystemGrid({ onSelect, onBack }) {
         </motion.div>
       ))}
     </div>
+
   );
 }
 
@@ -696,9 +1058,10 @@ const slidesData = [
     subtitle: "",
     content: (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', height: '100%', justifyContent: 'center' }}>
-        <h2 style={{ fontSize: '4.5rem', fontWeight: 800, marginBottom: '2rem', background: 'linear-gradient(to right, #8B7355, #D4A373)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1.2 }}>
+        <h2 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', background: 'linear-gradient(to right, #8B7355, #D4A373)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1.2 }}>
           Presentamos:
         </h2>
+
         <div className="carousel-container">
           <div className="carousel-track">
             {[
@@ -833,8 +1196,23 @@ const slidesData = [
     title: "Ecosistema Tecnológico",
     subtitle: "Click en un cuadro para profundizar",
     content: (props) => <EcosystemGrid {...props} />
+  },
+  {
+    id: 4,
+    title: "Automatización con n8n",
+    subtitle: "Flujo de Trabajo Inteligente",
+    logo: "/logos/N8n-logo-new.svg.png",
+    content: (
+      <div style={{ width: '100%', maxWidth: '1100px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+        <N8nWorkflow />
+      </div>
+
+    )
   }
+
+
 ];
+
 
 export default function App() {
   const [[page, direction], setPage] = useState([0, 0]);
@@ -894,7 +1272,7 @@ export default function App() {
       </div>
       <div className="nav-controls">
         <div 
-          className={`nav-zone nav-left ${page === 0 ? 'disabled' : ''}`} 
+          className={`nav-zone nav-left ${page === 0 || selectedEcoItem ? 'disabled' : ''}`} 
           onClick={() => paginate(-1)}
         >
           <div className="nav-hint">
@@ -902,7 +1280,7 @@ export default function App() {
           </div>
         </div>
         <div 
-          className={`nav-zone nav-right ${page === slidesData.length - 1 ? 'disabled' : ''}`} 
+          className={`nav-zone nav-right ${page === slidesData.length - 1 || selectedEcoItem ? 'disabled' : ''}`} 
           onClick={() => paginate(1)}
         >
           <div className="nav-hint">
@@ -910,6 +1288,8 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      <PresentationTools isVisible={!!selectedEcoItem} />
       <div className="progress-bar-container">
         <div className="progress-bar" style={{ width: `${((page + 1) / slidesData.length) * 100}%` }}></div>
       </div>
