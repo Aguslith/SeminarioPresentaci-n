@@ -705,10 +705,31 @@ const ServerArchitecture = () => {
 
 const ECOSYSTEM_DATA = {  nodejs: {
     title: "Node.js",
-    category: "⚛️ Frameworks y Entorno de Ejecución",
+    category: "🟢 Frameworks y Entorno",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
-    color: "#339933",
+    color: "#68a063",
     details: [
+      { 
+        title: "Servidor Backend (server.js)", 
+        text: "Configuración del servidor para conectar la aplicación con el webhook de n8n de forma segura:",
+        code: (
+          <div style={{ fontFamily: 'monospace', lineHeight: 1.5 }}>
+            <div style={{ color: '#6a9955', fontStyle: 'italic' }}>// Endpoint para generar el plan de comidas</div>
+            <div>
+              <span style={{ color: '#dcdcaa' }}>app</span>.<span style={{ color: '#dcdcaa' }}>post</span>(<span style={{ color: '#ce9178' }}>'/generate'</span>, <span style={{ color: '#569cd6' }}>async</span> (req, res) ={'>'} {'{'}
+              <CodeTooltip tooltipText="Método POST para recibir datos de forma segura"> [POST]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+               <span style={{ color: '#569cd6' }}>const</span> response = <span style={{ color: '#569cd6' }}>await</span> <span style={{ color: '#dcdcaa' }}>axios</span>.<span style={{ color: '#dcdcaa' }}>post</span>(N8N_URL, req.body);
+               <CodeTooltip tooltipText="Envía los datos a n8n para procesar con IA"> [Proxy a n8n]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+               <span style={{ color: '#9cdcfe' }}>res</span>.<span style={{ color: '#dcdcaa' }}>json</span>(response.data);
+            </div>
+            <div>{'}'});</div>
+          </div>
+        )
+      },
       { 
         title: "¿Qué es Node.js?", 
         text: "Es un entorno de ejecución de JavaScript orientado a eventos, construido con el motor V8 de Chrome. Permite ejecutar JavaScript fuera del navegador, específicamente en el servidor." 
@@ -739,17 +760,39 @@ const ECOSYSTEM_DATA = {  nodejs: {
         text: "Es una biblioteca de JavaScript creada por Meta para construir interfaces de usuario (UI). Se basa en componentes, lo que permite crear piezas de interfaz reutilizables e independientes que manejan su propio estado." 
       },
       { 
-        title: "¿Para qué sirve?", 
-        text: "Sirve para crear aplicaciones web dinámicas y de alto rendimiento (SPAs). Su principal función es actualizar de forma eficiente solo las partes de la página que cambian, gracias a su sistema de Virtual DOM." 
-      },
-      { 
-        title: "¿De qué sirve?", 
-        text: "Ofrece un desarrollo más rápido, mantenible y escalable. Facilita la creación de aplicaciones complejas al dividir la interfaz en pequeñas partes lógicas, mejorando enormemente la experiencia tanto del desarrollador como del usuario final." 
-      },
-      { 
-        title: "Lógica de Interfaz (App.jsx):", 
+        title: "Lógica de Interfaz (App.jsx)", 
         text: "Fragmento del componente principal que gestiona el estado de la vista actual y las transiciones:",
-        code: "// Hook de estado para controlar la vista actual de la app\nconst [currentView, setCurrentView] = useState('onboarding');\n\nreturn (\n  <div className=\"flex min-h-screen bg-surface\">\n    {/* AnimatePresence gestiona animaciones al desmontar componentes */}\n    <AnimatePresence mode=\"wait\">\n      <motion.div\n        key={currentView} // Cambiar la key dispara la transición\n        initial={{ opacity: 0, y: 20 }}\n        animate={{ opacity: 1, y: 0 }}\n        exit={{ opacity: 0, y: -20 }}\n      >\n        {/* Renderizado condicional basado en el estado */}\n        {currentView === 'dashboard' && <Dashboard />}\n        {currentView === 'log' && <FoodLog />}\n      </motion.div>\n    </AnimatePresence>\n  </div>\n);"
+        code: (
+          <div style={{ fontFamily: 'monospace', lineHeight: 1.5 }}>
+            <div style={{ color: '#6a9955', fontStyle: 'italic' }}>// Hook de estado para controlar la vista</div>
+            <div>
+              <span style={{ color: '#569cd6' }}>const</span> [view, setView] = <span style={{ color: '#dcdcaa' }}>useState</span>('home');
+              <CodeTooltip tooltipText="Define una variable reactiva que actualiza la UI al cambiar"> [Hook]</CodeTooltip>
+            </div>
+            <br />
+            <div>
+              <span style={{ color: '#c586c0' }}>return</span> (
+              <CodeTooltip tooltipText="Indica qué elementos HTML/JSX se mostrarán en pantalla"> [Return JSX]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#808080' }}>{'<'}</span>
+              <span style={{ color: '#569cd6' }}>AnimatePresence</span>
+              <span style={{ color: '#808080' }}>{'>'}</span>
+            </div>
+            <div style={{ paddingLeft: '2rem' }}>
+              <span style={{ color: '#808080' }}>{'<'}</span>
+              <span style={{ color: '#569cd6' }}>motion.div</span>
+              <span style={{ color: '#9cdcfe' }}> key</span>={'{view}'}
+              <span style={{ color: '#808080' }}>{' />'}</span>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#808080' }}>{'</'}</span>
+              <span style={{ color: '#569cd6' }}>AnimatePresence</span>
+              <span style={{ color: '#808080' }}>{'>'}</span>
+            </div>
+            <div>)</div>
+          </div>
+        )
       }
     ]
   },
@@ -772,7 +815,7 @@ const ECOSYSTEM_DATA = {  nodejs: {
       { 
         title: "Authentication", 
         text: "Provee un sistema de autenticación seguro y fácil de implementar. Soporta el acceso mediante correo/contraseña, proveedores sociales como Google o Facebook, y se integra perfectamente con otros servicios de Firebase.",
-        image: "/images/Captura3Firebase.png"
+        icon: <Lock size={80} color="#ffca28" />
       }
 
 
@@ -783,7 +826,7 @@ const ECOSYSTEM_DATA = {  nodejs: {
     category: "🐳 Infraestructura y Conectividad",
     logo: "/logos/Docker_Logo.png",
     color: "#2496ed",
-    details: [{ title: "Contenerización", text: "Es una plataforma de contenerización que empaqueta aplicaciones y sus dependencias en 'contenedores' aislados. Esto garantiza que el software se ejecute de manera idéntica en cualquier entorno, eliminando el clásico problema de 'en mi máquina sí funciona'." }]
+    details: [{ title: "Docker", text: "Próximamente" }]
   },
   rocky: {
     title: "Rocky Linux",
@@ -792,7 +835,7 @@ const ECOSYSTEM_DATA = {  nodejs: {
     color: "#10b981",
     isArchitecture: true,
     details: [
-      { title: "Sistema Operativo", text: "Es una distribución de Linux empresarial, de código abierto y gratuita, diseñada para ser 100% compatible con Red Hat Enterprise Linux (RHEL). Es el sucesor espiritual de CentOS, ideal para servidores que requieren máxima estabilidad y seguridad." },
+      { title: "Rocky Linux", text: "Próximamente" },
       { title: "Arquitectura de Despliegue", text: "Visualización del flujo de datos y contenedores sobre el servidor Rocky Linux." }
     ]
   },
@@ -847,9 +890,10 @@ function EcosystemGrid({ onSelect, onBack }) {
         <div className="expanded-header" style={{ 
           justifyContent: 'space-between', 
           border: 'none', 
-          padding: '0 1rem 1rem 1rem',
+          padding: '2.5rem 1.5rem 1rem 1.5rem', // Increased top and side padding
           position: 'relative',
-          zIndex: 1000
+          zIndex: 1000,
+          width: '100%'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <img src={item.logo} alt="" style={{ height: '30px' }} />
@@ -891,7 +935,7 @@ function EcosystemGrid({ onSelect, onBack }) {
                   )}
                 </AnimatePresence>
                 
-                <div className="sub-controls" style={{ marginTop: '0.2rem' }}>
+                {/* <div className="sub-controls" style={{ marginTop: '0.2rem' }}>
                   <button 
                     className="sub-btn" 
                     onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
@@ -911,7 +955,7 @@ function EcosystemGrid({ onSelect, onBack }) {
                   >
                     <ChevronRight />
                   </button>
-                </div>
+                </div> */}
 
                 {item.details[currentSubSlide].image && (
                    <motion.div 
@@ -941,7 +985,7 @@ function EcosystemGrid({ onSelect, onBack }) {
                 >
                   <ServerArchitecture />
                 </motion.div>
-                <div className="sub-controls" style={{ marginTop: '0.5rem' }}>
+                {/* <div className="sub-controls" style={{ marginTop: '0.5rem' }}>
                   <button 
                     className="sub-btn" 
                     onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
@@ -961,11 +1005,12 @@ function EcosystemGrid({ onSelect, onBack }) {
                   >
                     <ChevronRight />
                   </button>
-                </div>
-                <div className="sub-slide-card" style={{ borderLeft: `6px solid ${item.color}`, minHeight: 'auto', padding: '1.5rem', marginTop: '0.5rem' }}>
+                </div> */}
+                {/* User requested to remove the bottom text card for architecture/workflow views */}
+                {/* <div className="sub-slide-card" style={{ borderLeft: `6px solid ${item.color}`, minHeight: 'auto', padding: '1.5rem', marginTop: '0.5rem' }}>
                   <h4 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>{item.details[currentSubSlide].title}</h4>
                   <p style={{ fontSize: '0.95rem', lineHeight: 1.5 }}>{item.details[currentSubSlide].text}</p>
-                </div>
+                </div> */}
               </div>
             ) : (
               <motion.div
@@ -986,18 +1031,19 @@ function EcosystemGrid({ onSelect, onBack }) {
                     </div>
                   ) : item.details[currentSubSlide].icon ? (
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px', background: 'rgba(139, 115, 85, 0.05)', borderRadius: '12px' }}>
-                      {(() => {
-                        const Icon = item.details[currentSubSlide].icon;
-                        return <Icon size={80} color={item.color} />;
-                      })()}
+                      {item.details[currentSubSlide].icon}
                     </div>
                   ) : null}
 
                   <h4>{item.details[currentSubSlide].title}</h4>
                   <p>{item.details[currentSubSlide].text}</p>
                   {item.details[currentSubSlide].code && (
-                    <div className="code-block" style={{ marginTop: '0.5rem', fontSize: '0.75rem', background: '#2C2A29', color: '#61dafb', border: '1px solid #61dafb' }}>
-                      <pre style={{ margin: 0 }}>{item.details[currentSubSlide].code}</pre>
+                    <div className="code-block" style={{ marginTop: '0.5rem', fontSize: '0.85rem', background: '#1e1e1e', color: '#d4d4d4', border: '1px solid rgba(255,255,255,0.1)', padding: '1.5rem', borderRadius: '12px' }}>
+                      {typeof item.details[currentSubSlide].code === 'string' ? (
+                        <pre style={{ margin: 0, fontFamily: 'monospace' }}>{item.details[currentSubSlide].code}</pre>
+                      ) : (
+                        item.details[currentSubSlide].code
+                      )}
                     </div>
                   )}
                 </div>
@@ -1013,7 +1059,7 @@ function EcosystemGrid({ onSelect, onBack }) {
               className="sub-btn side-nav-btn left" 
               onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
               disabled={currentSubSlide === 0}
-              style={{ position: 'absolute', left: '-50px', top: '50%', transform: 'translateY(-50%)' }}
+              style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <ChevronLeft />
             </button>
@@ -1021,45 +1067,24 @@ function EcosystemGrid({ onSelect, onBack }) {
               className="sub-btn side-nav-btn right" 
               onClick={() => setCurrentSubSlide(prev => Math.min(item.details.length - 1, prev + 1))}
               disabled={currentSubSlide === item.details.length - 1}
-              style={{ position: 'absolute', right: '-50px', top: '50%', transform: 'translateY(-50%)' }}
+              style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}
             >
               <ChevronRight />
             </button>
 
-            {/* Mobile/Small Screen Controls */}
-            <div className="mobile-sub-controls" style={{ display: 'none', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem' }}>
-              <button 
-                className="sub-btn" 
-                onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
-                disabled={currentSubSlide === 0}
-              >
-                <ChevronLeft />
-              </button>
-              <div className="sub-dots" style={{ margin: 0 }}>
-                {item.details.map((_, i) => (
-                  <div key={i} className={`dot ${i === currentSubSlide ? 'active' : ''}`} style={{ backgroundColor: i === currentSubSlide ? item.color : '#ccc' }} />
-                ))}
-              </div>
-              <button 
-                className="sub-btn" 
-                onClick={() => setCurrentSubSlide(prev => Math.min(item.details.length - 1, prev + 1))}
-                disabled={currentSubSlide === item.details.length - 1}
-              >
-                <ChevronRight />
-              </button>
-            </div>
+            {/* User requested to remove all sub-controls */}
           </>
         )}
       </div>
 
-      {/* Desktop Dots at the bottom */}
-      {!item.isWorkflow && !item.isArchitecture && item.details.length > 1 && (
+      {/* User requested to remove desktop dots */}
+      {/* {!item.isWorkflow && !item.isArchitecture && item.details.length > 1 && (
         <div className="sub-dots desktop-dots" style={{ justifyContent: 'center', marginTop: '2rem' }}>
           {item.details.map((_, i) => (
             <div key={i} className={`dot ${i === currentSubSlide ? 'active' : ''}`} style={{ backgroundColor: i === currentSubSlide ? item.color : '#ccc' }} />
           ))}
         </div>
-      )}
+      )} */}
       </motion.div>
     );
   }
@@ -1237,70 +1262,9 @@ const slidesData = [
   },
   {
     id: 3,
-    title: "Ecosistema Tecnológico",
+    title: "Herramientas de uso",
     subtitle: "Click en un cuadro para profundizar",
     content: (props) => <EcosystemGrid {...props} />
-  },
-  {
-    id: 4,
-    title: "Automatización con n8n",
-    subtitle: "Flujo de Trabajo Inteligente",
-    logo: "/logos/N8n-logo-new.svg.png",
-    content: (
-      <div style={{ width: '100%', maxWidth: '1100px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
-        <N8nWorkflow />
-      </div>
-
-    )
-  },
-  {
-    id: 5,
-    title: "Arquitectura de Servidores",
-    subtitle: "Infraestructura y Despliegue",
-    logo: "/logos/Rocky_Linux_wordmark.svg",
-    content: (
-      <div style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
-        <ServerArchitecture />
-      </div>
-    )
-  },
-  {
-    id: 6,
-    title: "¡Gracias!",
-    subtitle: "Seminario de Actualización 2026",
-    content: (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', gap: '2rem' }}>
-        <motion.div
-          animate={{ 
-            scale: [1, 1.05, 1],
-            rotate: [0, 5, -5, 0]
-          }}
-          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-          style={{ 
-            background: 'rgba(212, 163, 115, 0.1)', 
-            padding: '4rem', 
-            borderRadius: '50%',
-            border: '2px solid rgba(212, 163, 115, 0.2)',
-            boxShadow: '0 20px 50px rgba(139, 115, 85, 0.1)'
-          }}
-        >
-          <Rocket size={120} color="#D4A373" />
-        </motion.div>
-        <div>
-          <h2 style={{ fontSize: '4rem', fontWeight: 800, color: '#8B7355', marginBottom: '0.5rem' }}>¿Preguntas?</h2>
-          <p style={{ fontSize: '1.5rem', color: '#5A5650' }}>Muchas gracias por su atención</p>
-        </div>
-        
-        <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
-           <div className="carousel-item" style={{ fontSize: '1rem', padding: '0.5rem 1.5rem' }}>
-             <Activity size={18} style={{ marginRight: '8px' }} /> Nutrición Consciente
-           </div>
-           <div className="carousel-item" style={{ fontSize: '1rem', padding: '0.5rem 1.5rem' }}>
-             <Globe size={18} style={{ marginRight: '8px' }} /> Proyecto 2026
-           </div>
-        </div>
-      </div>
-    )
   }
 ];
 
@@ -1320,6 +1284,30 @@ export default function App() {
       setSelectedEcoItem(null);
     }
   };
+
+  // Wheel navigation with cooldown
+  const lastScrollTime = useRef(0);
+  useEffect(() => {
+    const handleWheel = (e) => {
+      // Don't navigate if Ctrl is pressed (reserved for zoom) or if an ecosystem item is expanded
+      if (e.ctrlKey || selectedEcoItem) return;
+
+      const now = Date.now();
+      if (now - lastScrollTime.current < 1000) return; // 1 second cooldown
+
+      if (Math.abs(e.deltaY) > 50) { // Threshold for intentional scroll
+        if (e.deltaY > 0) {
+          paginate(1);
+        } else {
+          paginate(-1);
+        }
+        lastScrollTime.current = now;
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [page, selectedEcoItem]);
 
   const displayTitle = selectedEcoItem ? selectedEcoItem.title : currentSlide.title;
   const displayLogo = selectedEcoItem ? selectedEcoItem.logo : currentSlide.logo;
