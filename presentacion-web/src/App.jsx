@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database, Lock, Link, Globe, Sparkles, CheckCircle2, Activity, Server, Monitor, HardDrive, Mail, Shield, Share2, Brain, Code, FileText, Layout, RefreshCcw, Search, ZoomIn, MousePointer2, PenTool, Eraser, Wand2, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database, Lock, Link, Globe, Sparkles, CheckCircle2, Activity, Server, Monitor, HardDrive, Mail, Shield, Share2, Brain, Code, FileText, Layout, RefreshCcw, Search, ZoomIn, MousePointer2, PenTool, Eraser, Wand2, Trash2, Cpu, Box, Layers } from 'lucide-react';
 import './index.css';
 
 const PresentationTools = ({ isVisible }) => {
@@ -293,10 +293,31 @@ const ZoomableImage = ({ src, alt }) => {
 };
 
 const CodeTooltip = ({ children, tooltipText }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
   return (
-    <span className="code-tooltip-container">
+    <span 
+      className="code-tooltip-container"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+      onClick={(e) => {
+        e.stopPropagation();
+        setIsOpen(!isOpen);
+      }}
+    >
       <span className="code-tooltip-trigger">{children}</span>
-      <span className="code-tooltip-popup">{tooltipText}</span>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.span 
+            initial={{ opacity: 0, y: 5, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 5, scale: 0.95 }}
+            className="code-tooltip-popup"
+          >
+            {tooltipText}
+          </motion.span>
+        )}
+      </AnimatePresence>
     </span>
   );
 };
@@ -385,7 +406,19 @@ const N8nNode = ({ icon: Icon, title, description, color, x, y, delay, character
           position: 'relative'
         }}
       >
-        <Icon size={24} color={color} />
+        <motion.div
+          animate={{ 
+            y: [0, -4, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: delay * 0.5
+          }}
+        >
+          <Icon size={24} color={color} />
+        </motion.div>
         
         {/* Connection points */}
         <div style={{ position: 'absolute', left: '-4px', top: '50%', transform: 'translateY(-50%)', width: '6px', height: '6px', borderRadius: '50%', background: '#444', border: '1px solid #666' }} />
@@ -710,42 +743,84 @@ const ECOSYSTEM_DATA = {  nodejs: {
     color: "#68a063",
     details: [
       { 
-        title: "Servidor Backend (server.js)", 
-        text: "Configuración del servidor para conectar la aplicación con el webhook de n8n de forma segura:",
-        code: (
-          <div style={{ fontFamily: 'monospace', lineHeight: 1.5 }}>
-            <div style={{ color: '#6a9955', fontStyle: 'italic' }}>// Endpoint para generar el plan de comidas</div>
-            <div>
-              <span style={{ color: '#dcdcaa' }}>app</span>.<span style={{ color: '#dcdcaa' }}>post</span>(<span style={{ color: '#ce9178' }}>'/generate'</span>, <span style={{ color: '#569cd6' }}>async</span> (req, res) ={'>'} {'{'}
-              <CodeTooltip tooltipText="Método POST para recibir datos de forma segura"> [POST]</CodeTooltip>
-            </div>
-            <div style={{ paddingLeft: '1rem' }}>
-               <span style={{ color: '#569cd6' }}>const</span> response = <span style={{ color: '#569cd6' }}>await</span> <span style={{ color: '#dcdcaa' }}>axios</span>.<span style={{ color: '#dcdcaa' }}>post</span>(N8N_URL, req.body);
-               <CodeTooltip tooltipText="Envía los datos a n8n para procesar con IA"> [Proxy a n8n]</CodeTooltip>
-            </div>
-            <div style={{ paddingLeft: '1rem' }}>
-               <span style={{ color: '#9cdcfe' }}>res</span>.<span style={{ color: '#dcdcaa' }}>json</span>(response.data);
-            </div>
-            <div>{'}'});</div>
+        title: "¿Qué es Node.js?", 
+        text: "Es un entorno de ejecución de JavaScript orientado a eventos, construido con el motor V8 de Chrome. Rompe la barrera que limitaba a JavaScript al navegador, permitiendo ejecutarlo en el servidor." 
+      },
+      { 
+        title: "¿Cómo lo descargo?", 
+        image: "/images/nodeinstalacion/paginaoriginal.png",
+        component: (
+          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <p style={{ color: '#666', marginBottom: '1rem' }}>Puedes descargar la versión LTS (estable) desde el sitio oficial:</p>
+            <a 
+              href="https://nodejs.org/es" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                background: '#68a063', 
+                color: 'white', 
+                padding: '10px 20px', 
+                borderRadius: '50px', 
+                textDecoration: 'none', 
+                fontWeight: 800,
+                fontSize: '0.9rem',
+                boxShadow: '0 4px 12px rgba(104, 160, 99, 0.3)'
+              }}
+            >
+              <Globe size={18} /> Ir a nodejs.org/es
+            </a>
           </div>
         )
       },
       { 
-        title: "¿Qué es Node.js?", 
-        text: "Es un entorno de ejecución de JavaScript orientado a eventos, construido con el motor V8 de Chrome. Permite ejecutar JavaScript fuera del navegador, específicamente en el servidor." 
+        title: "Proceso de Instalación", 
+        text: "Una vez descargado, sigue los pasos del asistente de instalación. Es un proceso sencillo de 'Siguiente' asegurándote de incluir npm (Node Package Manager).",
+        image: "/images/nodeinstalacion/instalacionnode.png"
       },
       { 
         title: "¿Para qué sirve?", 
-        text: "Se utiliza para construir aplicaciones de red rápidas y escalables. Es ideal para aplicaciones en tiempo real como chats, servidores de API, herramientas de streaming y microservicios." 
+        text: "Se utiliza para construir aplicaciones de red rápidas y escalables. Es la base que sostiene nuestro backend, permitiendo manejar múltiples conexiones simultáneas y procesar datos antes de enviarlos a la base de datos o a n8n." 
       },
       { 
-        title: "¿De qué sirve?", 
-        text: "Permite usar un único lenguaje (JavaScript) tanto en el cliente como en el servidor. Su modelo de E/S no bloqueante lo hace extremadamente eficiente para manejar múltiples conexiones simultáneas con poco consumo de recursos." 
-      },
-      { 
-        title: "Ejemplos de código (Express + n8n):", 
-        text: "Aquí tienes el código real del backend que conecta nuestra app con el flujo de n8n:",
-        code: "// Importamos Express para el servidor\nimport express from 'express';\nconst app = express();\nconst PORT = 5000;\n\n// Middleware para procesar JSON del cliente\napp.use(express.json());\n\n// Endpoint que dispara la automatización en n8n\napp.post('/generate-meal-plan', async (req, res) => {\n  const N8N_URL = 'http://localhost:5678/webhook/nutrition-plan';\n  \n  try {\n    // Enviamos los datos del usuario (macros, alergias) a n8n\n    const response = await fetch(N8N_URL, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(req.body),\n    });\n\n    const data = await response.json();\n    res.json({ success: true, details: data }); // Éxito: Plan generado\n  } catch (error) {\n    res.status(500).json({ success: false, error: 'Error en servidor' });\n  }\n});"
+        title: "Servidor y API (server.js)", 
+        text: "El backend utiliza Express para gestionar las rutas y vincularse con n8n de forma segura.",
+        code: (
+          <div style={{ fontFamily: 'monospace', lineHeight: 1.5, fontSize: '0.75rem' }}>
+            <div><span style={{ color: '#569cd6' }}>import</span> express <span style={{ color: '#569cd6' }}>from</span> <span style={{ color: '#ce9178' }}>'express'</span>;</div>
+            <div><span style={{ color: '#569cd6' }}>const</span> app = <span style={{ color: '#dcdcaa' }}>express</span>();</div>
+            <br />
+            <div>
+              <span style={{ color: '#9cdcfe' }}>app</span>.<span style={{ color: '#dcdcaa' }}>use</span>(express.<span style={{ color: '#dcdcaa' }}>json</span>());
+              <CodeTooltip tooltipText="Permite al servidor procesar datos enviados en formato JSON"> [JSON Middleware]</CodeTooltip>
+            </div>
+            <br />
+            <div><span style={{ color: '#6a9955' }}>// Endpoint vinculado con n8n</span></div>
+            <div>
+              <span style={{ color: '#9cdcfe' }}>app</span>.<span style={{ color: '#dcdcaa' }}>post</span>(<span style={{ color: '#ce9178' }}>{"'/generate-meal-plan'"}</span>, <span style={{ color: '#569cd6' }}>async</span> (req, res) {"=>"} {"{"}
+              <CodeTooltip tooltipText="Ruta que recibe los datos. 'post' envía información, 'async' permite esperar procesos largos."> [Endpoint POST]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#569cd6' }}>const</span> N8N_WEBHOOK_URL = <span style={{ color: '#ce9178' }}>'...'</span>;
+              <CodeTooltip tooltipText="'const' define una variable constante que no cambia su valor."> [Variable]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#569cd6' }}>try</span> {"{"}
+              <CodeTooltip tooltipText="'try' inicia un bloque de código que puede fallar, para luego capturar el error."> [Manejo Errores]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '2rem' }}>
+              <span style={{ color: '#569cd6' }}>const</span> response = <span style={{ color: '#569cd6' }}>await</span> <span style={{ color: '#dcdcaa' }}>fetch</span>(N8N_WEBHOOK_URL, {'{'}
+              <CodeTooltip tooltipText="'await fetch' hace una petición a otra web y espera la respuesta sin bloquear todo."> [Trigger n8n]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '3rem' }}>method: <span style={{ color: '#ce9178' }}>'POST'</span>,</div>
+            <div style={{ paddingLeft: '3rem' }}>body: <span style={{ color: '#9cdcfe' }}>JSON</span>.<span style={{ color: '#dcdcaa' }}>stringify</span>(req.body),</div>
+            <div style={{ paddingLeft: '2rem' }}>{"}"});</div>
+            <div style={{ paddingLeft: '1rem' }}>{"}"} <span style={{ color: '#569cd6' }}>catch</span> (error) {"{"} ... {"}"}</div>
+            <div>{"}"});</div>
+          </div>
+        )
       }
     ]
   },
@@ -757,40 +832,80 @@ const ECOSYSTEM_DATA = {  nodejs: {
     details: [
       { 
         title: "¿Qué es React?", 
-        text: "Es una biblioteca de JavaScript creada por Meta para construir interfaces de usuario (UI). Se basa en componentes, lo que permite crear piezas de interfaz reutilizables e independientes que manejan su propio estado." 
+        text: "Es una biblioteca de JavaScript creada por Meta para construir interfaces de usuario (UI). Se basa en componentes reutilizables que manejan su propio estado y se actualizan de forma eficiente sin recargar la página." 
+      },
+      { 
+        title: "¿Cómo lo instalo?", 
+        text: "Actualmente se recomienda usar herramientas rápidas como Vite. El comando para inicializar un proyecto moderno de React es:",
+        code: `npm create vite@latest my-app -- --template react`
+      },
+      { 
+        title: "¿Para qué sirve?", 
+        text: "Sirve para crear aplicaciones web dinámicas y altamente interactivas (Single Page Applications). En este proyecto, se encarga de mostrar los formularios de nutrición, las gráficas y las transiciones fluidas de la app." 
       },
       { 
         title: "Lógica de Interfaz (App.jsx)", 
-        text: "Fragmento del componente principal que gestiona el estado de la vista actual y las transiciones:",
+        text: "Fragmento del componente principal que gestiona el estado de la vista actual y las transiciones animadas.",
         code: (
-          <div style={{ fontFamily: 'monospace', lineHeight: 1.5 }}>
-            <div style={{ color: '#6a9955', fontStyle: 'italic' }}>// Hook de estado para controlar la vista</div>
-            <div>
-              <span style={{ color: '#569cd6' }}>const</span> [view, setView] = <span style={{ color: '#dcdcaa' }}>useState</span>('home');
-              <CodeTooltip tooltipText="Define una variable reactiva que actualiza la UI al cambiar"> [Hook]</CodeTooltip>
+          <div style={{ fontFamily: 'monospace', lineHeight: 1.5, fontSize: '0.75rem' }}>
+            <div><span style={{ color: '#569cd6' }}>import</span> {"{ useState }"} <span style={{ color: '#569cd6' }}>from</span> <span style={{ color: '#ce9178' }}>'react'</span>;</div>
+            <br />
+            <div><span style={{ color: '#569cd6' }}>export default function</span> <span style={{ color: '#dcdcaa' }}>App</span>() {"{"}</div>
+            <CodeTooltip tooltipText="'function' define un bloque de código reusable. 'export default' permite usarlo en otros archivos."> [Componente Principal]</CodeTooltip>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#569cd6' }}>const</span> [view, setView] = <span style={{ color: '#dcdcaa' }}>useState</span>(<span style={{ color: '#ce9178' }}>'onboarding'</span>);
+              <CodeTooltip tooltipText="Hook para guardar info que cambia (estado). 'view' es el valor, 'setView' la función para cambiarlo."> [Estado React]</CodeTooltip>
             </div>
             <br />
-            <div>
-              <span style={{ color: '#c586c0' }}>return</span> (
-              <CodeTooltip tooltipText="Indica qué elementos HTML/JSX se mostrarán en pantalla"> [Return JSX]</CodeTooltip>
-            </div>
             <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#808080' }}>{'<'}</span>
-              <span style={{ color: '#569cd6' }}>AnimatePresence</span>
-              <span style={{ color: '#808080' }}>{'>'}</span>
+              <span style={{ color: '#c586c0' }}>return</span> (
             </div>
             <div style={{ paddingLeft: '2rem' }}>
-              <span style={{ color: '#808080' }}>{'<'}</span>
-              <span style={{ color: '#569cd6' }}>motion.div</span>
+              <span style={{ color: '#808080' }}>{'<'}</span><span style={{ color: '#569cd6' }}>AnimatePresence</span><span style={{ color: '#808080' }}>{'>'}</span>
+              <CodeTooltip tooltipText="Permite animar la salida de componentes cuando se desmontan"> [Animaciones]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '3rem' }}>
+              <span style={{ color: '#808080' }}>{'<'}</span><span style={{ color: '#569cd6' }}>motion.div</span>
               <span style={{ color: '#9cdcfe' }}> key</span>={'{view}'}
-              <span style={{ color: '#808080' }}>{' />'}</span>
+              <span style={{ color: '#9cdcfe' }}> initial</span>={'{{ opacity: 0 }}'}
             </div>
-            <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#808080' }}>{'</'}</span>
-              <span style={{ color: '#569cd6' }}>AnimatePresence</span>
-              <span style={{ color: '#808080' }}>{'>'}</span>
+            <div style={{ paddingLeft: '3rem' }}>
+              <span style={{ color: '#808080' }}>{'  />'}</span>
             </div>
-            <div>)</div>
+            <div style={{ paddingLeft: '2rem' }}>
+              <span style={{ color: '#808080' }}>{'</'}</span><span style={{ color: '#569cd6' }}>AnimatePresence</span><span style={{ color: '#808080' }}>{'>'}</span>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>);</div>
+            <div>{'}'}</div>
+          </div>
+        )
+      },
+      { 
+        title: "¿Cómo se obtiene?", 
+        image: "/images/reactinstalacion/paginareact.png",
+        component: (
+          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <p style={{ color: '#666', marginBottom: '1rem' }}>Puedes consultar la documentación oficial y tutoriales en español en:</p>
+            <a 
+              href="https://es.react.dev/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                background: '#61dafb', 
+                color: '#20232a', 
+                padding: '10px 20px', 
+                borderRadius: '50px', 
+                textDecoration: 'none', 
+                fontWeight: 800,
+                fontSize: '0.9rem',
+                boxShadow: '0 4px 12px rgba(97, 218, 251, 0.3)'
+              }}
+            >
+              <Globe size={18} /> Ir a es.react.dev
+            </a>
           </div>
         )
       }
@@ -826,17 +941,62 @@ const ECOSYSTEM_DATA = {  nodejs: {
     category: "🐳 Infraestructura y Conectividad",
     logo: "/logos/Docker_Logo.png",
     color: "#2496ed",
-    details: [{ title: "Docker", text: "Próximamente" }]
+    details: [
+      { 
+        title: "¿Cuál es su rol central?", 
+        text: "Es la herramienta que nos permite empaquetar y ejecutar toda la aplicación de forma consistente dentro de Rocky Linux. Garantiza que el sistema se ejecute siempre igual, sin importar el entorno.",
+        icon: <Box size={80} color="#2496ed" />
+      },
+      { 
+        title: "¿Cómo funciona mediante contenedores?", 
+        text: "Funciona mediante entornos aislados donde cada servicio corre con todo lo que necesita (librerías, dependencias y configuración), asegurando una portabilidad total.",
+        icon: <Layers size={80} color="#2496ed" />
+      },
+      { 
+        title: "¿Cómo lo usamos en este proyecto?", 
+        text: "Levantamos dos servicios principales: un contenedor para el Frontend en React (puerto 3000) y un contenedor para el Backend en Node.js con Express (puerto 3001).",
+        icon: <Monitor size={80} color="#2496ed" />
+      },
+      { 
+        title: "¿Cómo gestionamos ambos servicios?", 
+        text: "Usamos Docker Compose para definir toda la arquitectura en un solo archivo, especificando la construcción, puertos y la comunicación entre contenedores.",
+        code: `# Docker Compose: Arquitectura del Proyecto\nservices:\n  frontend:\n    build: ./frontend\n    ports: ["3000:3000"]\n  backend:\n    build: ./backend\n    ports: ["3001:3001"]`,
+        icon: <Share2 size={80} color="#2496ed" />
+      },
+      { 
+        title: "¿Qué comandos utilizamos para el despliegue?", 
+        text: "Comandos clave: 'build' para las imágenes, 'up' para levantar la arquitectura y 'down' para detenerla. También realizamos rebuilds para aplicar modificaciones rápidas.",
+        icon: <RefreshCcw size={80} color="#2496ed" />
+      }
+    ]
   },
   rocky: {
     title: "Rocky Linux",
     category: "🔥 Backend y Despliegue",
     logo: "/logos/Rocky_Linux_wordmark.svg.png",
     color: "#10b981",
-    isArchitecture: true,
     details: [
-      { title: "Rocky Linux", text: "Próximamente" },
-      { title: "Arquitectura de Despliegue", text: "Visualización del flujo de datos y contenedores sobre el servidor Rocky Linux." }
+      { 
+        title: "Máquina Virtual y Rocky Linux", 
+        text: "Una Máquina Virtual es un software que simula una computadora dentro de otra física, permitiendo trabajar en entornos aislados. Dentro de nuestra MV instalamos Rocky Linux, un sistema operativo orientado a servidores, elegido por su estabilidad, seguridad y rendimiento.",
+        icon: (
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+            <Server size={80} color="#10b981" />
+            <Monitor size={80} color="#10b981" />
+          </div>
+        )
+      },
+      { 
+        title: "Administración y Orquestación", 
+        text: "Dentro del servidor, Rocky Linux administra los recursos del sistema y ejecuta Docker, donde se levantan contenedores separados para el frontend en React y el backend en Node.js. Docker crea una red interna que permite la comunicación entre ambos servicios. A su vez, el backend se conecta con Firebase para almacenar información y con n8n mediante webhooks para automatizar procesos.",
+        icon: <Cpu size={80} color="#10b981" />
+      },
+      { 
+        title: "Flujo de Interacción del Usuario", 
+        text: "Ciclo de vida de una petición desde el navegador hasta la respuesta final:",
+        code: `• Usuario ingresa al frontend desde el navegador\n• Completa el formulario de datos\n• Frontend envía datos al backend\n• Backend valida y procesa datos\n• Guarda información en Firebase\n• Envía datos a n8n\n• n8n genera automatizaciones (PDF / Email)\n• Usuario recibe respuesta final`,
+        icon: <Activity size={80} color="#10b981" />
+      }
     ]
   },
   n8n: {
@@ -844,21 +1004,20 @@ const ECOSYSTEM_DATA = {  nodejs: {
     category: "🐳 Infraestructura y Conectividad",
     logo: "/logos/N8n-logo-new.svg.png",
     color: "#ff6d5a",
-    isWorkflow: true,
     details: [
       { 
         title: "Arquitectura del Flujo", 
-        text: "Diagrama interactivo de la automatización completa en n8n." 
+        image: "/images/n8n/nodos-a-representar.jpeg" 
       },
-      { image: "/images/n8n/imagenn8n1.jpeg", title: "Paso 1: Webhook de Entrada" },
-      { image: "/images/n8n/imagenn8n2.jpeg", title: "Paso 2: Procesamiento de Datos" },
-      { image: "/images/n8n/imagenn8n3.jpeg", title: "Paso 3: Lógica Nutricional" },
-      { image: "/images/n8n/imagenn8n4.jpeg", title: "Paso 4: Orquestación IA" },
-      { image: "/images/n8n/imagenn8n5.jpeg", title: "Paso 5: Agente OpenAI" },
-      { image: "/images/n8n/imagenn8n6.jpeg", title: "Paso 6: Parser de Resultados" },
-      { image: "/images/n8n/imagenn8n7.jpeg", title: "Paso 7: Generador de Reporte" },
-      { image: "/images/n8n/imagenn8n8.jpeg", title: "Paso 8: Conversión a PDF" },
-      { image: "/images/n8n/imagenn8n9.jpeg", title: "Paso 9: Notificación Email" }
+      { image: "/images/n8n/imagenn8n1.jpeg", title: "1" },
+      { image: "/images/n8n/imagenn8n2.jpeg", title: "2" },
+      { image: "/images/n8n/imagenn8n3.jpeg", title: "3" },
+      { image: "/images/n8n/imagenn8n4.jpeg", title: "4" },
+      { image: "/images/n8n/imagenn8n5.jpeg", title: "5" },
+      { image: "/images/n8n/imagenn8n6.jpeg", title: "6" },
+      { image: "/images/n8n/imagenn8n7.jpeg", title: "7" },
+      { image: "/images/n8n/imagenn8n8.jpeg", title: "8" },
+      { image: "/images/n8n/imagenn8n9.jpeg", title: "9" }
     ]
   }
 
@@ -906,174 +1065,85 @@ function EcosystemGrid({ onSelect, onBack }) {
 
         <div className="sub-slides-container">
           <AnimatePresence mode="wait">
-            {item.isWorkflow ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%' }}>
-                <AnimatePresence mode="wait">
-                  {currentSubSlide === 0 ? (
-                    <motion.div
-                      key="workflow-diagram"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      style={{ width: '100%', margin: '0.5rem 0' }}
-                    >
-                      <N8nWorkflow />
-                    </motion.div>
-                  ) : (
-                     <motion.div
-                      key={currentSubSlide}
-                      initial={{ x: 50, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -50, opacity: 0 }}
-                      style={{ width: '100%', maxWidth: '900px' }}
-                    >
-                      <ZoomableImage 
-                        src={item.details[currentSubSlide].image} 
-                        alt={item.details[currentSubSlide].title} 
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                
-                {/* <div className="sub-controls" style={{ marginTop: '0.2rem' }}>
-                  <button 
-                    className="sub-btn" 
-                    onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
-                    disabled={currentSubSlide === 0}
-                  >
-                    <ChevronLeft />
-                  </button>
-                  <div className="sub-dots">
-                    {item.details.map((_, i) => (
-                      <div key={i} className={`dot ${i === currentSubSlide ? 'active' : ''}`} style={{ backgroundColor: i === currentSubSlide ? item.color : '#ccc' }} />
-                    ))}
-                  </div>
-                  <button 
-                    className="sub-btn" 
-                    onClick={() => setCurrentSubSlide(prev => Math.min(item.details.length - 1, prev + 1))}
-                    disabled={currentSubSlide === item.details.length - 1}
-                  >
-                    <ChevronRight />
-                  </button>
-                </div> */}
-
-                {item.details[currentSubSlide].image && (
-                   <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{ 
-                      textAlign: 'center', 
-                      marginTop: '0.5rem', 
-                      color: '#888', 
-                      fontSize: '0.9rem', 
-                      fontWeight: 600,
-                      padding: '0 1rem'
-                    }}
-                   >
-                     {item.details[currentSubSlide].title}
-                   </motion.div>
-                )}
-              </div>
-            ) : item.isArchitecture ? (
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-                <motion.div
-                  key="arch"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  style={{ width: '100%' }}
-                >
-                  <ServerArchitecture />
-                </motion.div>
-                {/* <div className="sub-controls" style={{ marginTop: '0.5rem' }}>
-                  <button 
-                    className="sub-btn" 
-                    onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
-                    disabled={currentSubSlide === 0}
-                  >
-                    <ChevronLeft />
-                  </button>
-                  <div className="sub-dots">
-                    {item.details.map((_, i) => (
-                      <div key={i} className={`dot ${i === currentSubSlide ? 'active' : ''}`} style={{ backgroundColor: i === currentSubSlide ? item.color : '#ccc' }} />
-                    ))}
-                  </div>
-                  <button 
-                    className="sub-btn" 
-                    onClick={() => setCurrentSubSlide(prev => Math.min(item.details.length - 1, prev + 1))}
-                    disabled={currentSubSlide === item.details.length - 1}
-                  >
-                    <ChevronRight />
-                  </button>
-                </div> */}
-                {/* User requested to remove the bottom text card for architecture/workflow views */}
-                {/* <div className="sub-slide-card" style={{ borderLeft: `6px solid ${item.color}`, minHeight: 'auto', padding: '1.5rem', marginTop: '0.5rem' }}>
-                  <h4 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>{item.details[currentSubSlide].title}</h4>
-                  <p style={{ fontSize: '0.95rem', lineHeight: 1.5 }}>{item.details[currentSubSlide].text}</p>
-                </div> */}
-              </div>
-            ) : (
-              <motion.div
-                key={currentSubSlide}
-                initial={{ x: 50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -50, opacity: 0 }}
-                className="sub-slide-card"
-                style={{ borderLeft: `6px solid ${item.color}` }}
-              >
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-                  {item.details[currentSubSlide].image ? (
-                    <div style={{ width: '100%', marginBottom: '1rem' }}>
-                      <ZoomableImage 
-                        src={item.details[currentSubSlide].image} 
-                        alt={item.details[currentSubSlide].title} 
-                      />
-                    </div>
-                  ) : item.details[currentSubSlide].icon ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px', background: 'rgba(139, 115, 85, 0.05)', borderRadius: '12px' }}>
-                      {item.details[currentSubSlide].icon}
-                    </div>
-                  ) : null}
-
-                  <h4>{item.details[currentSubSlide].title}</h4>
-                  <p>{item.details[currentSubSlide].text}</p>
-                  {item.details[currentSubSlide].code && (
-                    <div className="code-block" style={{ marginTop: '0.5rem', fontSize: '0.85rem', background: '#1e1e1e', color: '#d4d4d4', border: '1px solid rgba(255,255,255,0.1)', padding: '1.5rem', borderRadius: '12px' }}>
-                      {typeof item.details[currentSubSlide].code === 'string' ? (
-                        <pre style={{ margin: 0, fontFamily: 'monospace' }}>{item.details[currentSubSlide].code}</pre>
-                      ) : (
-                        item.details[currentSubSlide].code
-                      )}
-                    </div>
-                  )}
+            <motion.div
+              key={currentSubSlide}
+              initial={{ x: 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -50, opacity: 0 }}
+              style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            >
+              {item.details[currentSubSlide].component ? (
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                   {item.details[currentSubSlide].title && <h4 style={{ color: item.color, fontSize: '1.2rem', marginBottom: '0.5rem', textAlign: 'center' }}>{item.details[currentSubSlide].title}</h4>}
+                   {item.details[currentSubSlide].component}
+                   {item.details[currentSubSlide].text && <p style={{ color: '#666', fontSize: '0.9rem', textAlign: 'center' }}>{item.details[currentSubSlide].text}</p>}
                 </div>
-              </motion.div>
-            )}
+              ) : (
+                <div className="sub-slide-card" style={{ borderLeft: `6px solid ${item.color}`, width: '100%' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+                    {item.details[currentSubSlide].image ? (
+                      <div style={{ width: '100%', marginBottom: '1rem' }}>
+                        <ZoomableImage 
+                          src={item.details[currentSubSlide].image} 
+                          alt={item.details[currentSubSlide].title} 
+                        />
+                      </div>
+                    ) : item.details[currentSubSlide].icon ? (
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px', background: 'rgba(139, 115, 85, 0.05)', borderRadius: '12px' }}>
+                        {item.details[currentSubSlide].icon}
+                      </div>
+                    ) : null}
+
+                    <h4 style={{ textAlign: item.details[currentSubSlide].image ? 'center' : 'left' }}>{item.details[currentSubSlide].title}</h4>
+                    <p style={{ textAlign: item.details[currentSubSlide].image ? 'center' : 'left' }}>{item.details[currentSubSlide].text}</p>
+                    
+                    {item.details[currentSubSlide].code && (
+                      <div className="code-block">
+                        {typeof item.details[currentSubSlide].code === 'string' ? (
+                          <pre style={{ margin: 0 }}>{item.details[currentSubSlide].code}</pre>
+                        ) : (
+                          item.details[currentSubSlide].code
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </motion.div>
           </AnimatePresence>
 
-        {/* Navigation Controls: Side arrows for Desktop, Bottom controls for Mobile */}
-        {!item.isWorkflow && !item.isArchitecture && item.details.length > 1 && (
-          <>
-            {/* Desktop Side Arrows */}
+        {/* Navigation Controls */}
+        {item.details.length > 1 && (
+          <div className="sub-navigation-controls">
             <button 
-              className="sub-btn side-nav-btn left" 
+              className="sub-btn side-nav-btn" 
               onClick={() => setCurrentSubSlide(prev => Math.max(0, prev - 1))}
               disabled={currentSubSlide === 0}
-              style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }}
             >
-              <ChevronLeft />
+              <ChevronLeft size={24} />
+              <span className="mobile-label">Anterior</span>
             </button>
+            
+            <div className="sub-dots">
+              {item.details.map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`dot ${i === currentSubSlide ? 'active' : ''}`} 
+                  style={{ backgroundColor: i === currentSubSlide ? item.color : '#ccc' }} 
+                  onClick={() => setCurrentSubSlide(i)}
+                />
+              ))}
+            </div>
+
             <button 
-              className="sub-btn side-nav-btn right" 
+              className="sub-btn side-nav-btn" 
               onClick={() => setCurrentSubSlide(prev => Math.min(item.details.length - 1, prev + 1))}
               disabled={currentSubSlide === item.details.length - 1}
-              style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}
             >
-              <ChevronRight />
+              <span className="mobile-label">Siguiente</span>
+              <ChevronRight size={24} />
             </button>
-
-            {/* User requested to remove all sub-controls */}
-          </>
+          </div>
         )}
       </div>
 
@@ -1090,7 +1160,7 @@ function EcosystemGrid({ onSelect, onBack }) {
   }
 
   return (
-    <div className="grid-content" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+    <div className="grid-content">
       {Object.entries(ECOSYSTEM_DATA).map(([key, item]) => (
         <motion.div 
           key={key}
@@ -1102,7 +1172,13 @@ function EcosystemGrid({ onSelect, onBack }) {
           style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '1.5rem' }}
         >
           <div style={{ fontSize: '0.7rem', color: item.color, fontWeight: 800, marginBottom: '0.5rem', opacity: 0.8 }}>{item.category.toUpperCase()}</div>
-          <img src={item.logo} alt={item.title} style={{ height: '45px', marginBottom: '0.8rem', objectFit: 'contain' }} />
+          <motion.img 
+            src={item.logo} 
+            alt={item.title} 
+            style={{ height: '45px', marginBottom: '0.8rem', objectFit: 'contain' }} 
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
           <h3 style={{ margin: 0, fontSize: '1.2rem' }}>{item.title}</h3>
           <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '0.4rem' }}>Click para definición</p>
         </motion.div>
@@ -1141,7 +1217,22 @@ const slidesData = [
               { name: "n8n", icon: "/logos/N8n-logo-new.svg.png" }
             ]).map((tech, index) => (
               <div key={index} className="carousel-item">
-                <img src={tech.icon} className="carousel-icon" alt={tech.name}/> {tech.name}
+                <motion.img 
+                  src={tech.icon} 
+                  className="carousel-icon" 
+                  alt={tech.name}
+                  animate={{ 
+                    rotate: [0, 5, -5, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    duration: 5, 
+                    repeat: Infinity, 
+                    ease: "easeInOut",
+                    delay: index * 0.2
+                  }}
+                /> 
+                {tech.name}
               </div>
             ))}
           </div>
@@ -1158,67 +1249,111 @@ const slidesData = [
     subtitle: "Lenguajes Esenciales",
     content: (
       <div className="grid-content" style={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+      <div className="grid-content" style={{ width: '100%' }}>
           <motion.div variants={itemVariants} className="info-card" style={{ padding: '1.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" style={{ height: '40px', marginBottom: '1rem' }} alt="HTML5"/>
+            <motion.img 
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" 
+              style={{ height: '40px', marginBottom: '1rem' }} 
+              alt="HTML5"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
             <h4 style={{ color: '#e34f26', fontSize: '1.2rem', marginBottom: '0.5rem' }}>HTML</h4>
             <p style={{ fontSize: '0.85rem', lineHeight: 1.5, color: '#666' }}>Estructura y significado del contenido mediante etiquetas.</p>
           </motion.div>
           <motion.div variants={itemVariants} className="info-card" style={{ padding: '1.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" style={{ height: '40px', marginBottom: '1rem' }} alt="CSS3"/>
+            <motion.img 
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" 
+              style={{ height: '40px', marginBottom: '1rem' }} 
+              alt="CSS3"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+            />
             <h4 style={{ color: '#1572b6', fontSize: '1.2rem', marginBottom: '0.5rem' }}>CSS</h4>
             <p style={{ fontSize: '0.85rem', lineHeight: 1.5, color: '#666' }}>Diseño, colores y animaciones para la capa visual.</p>
           </motion.div>
           <motion.div variants={itemVariants} className="info-card" style={{ padding: '1.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" style={{ height: '40px', marginBottom: '1rem' }} alt="JS"/>
+            <motion.img 
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" 
+              style={{ height: '40px', marginBottom: '1rem' }} 
+              alt="JS"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
             <h4 style={{ color: '#f7df1e', fontSize: '1.2rem', marginBottom: '0.5rem' }}>JavaScript</h4>
             <p style={{ fontSize: '0.85rem', lineHeight: 1.5, color: '#666' }}>Interactividad y lógica dinámica en el cliente.</p>
           </motion.div>
         </div>
 
         <motion.div variants={itemVariants} className="info-card" style={{ marginTop: '0.5rem' }}>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Arquitectura de Código:</h3>
-          <div className="code-block" style={{ fontSize: '0.85rem', lineHeight: 1.4, background: '#1e1e1e', color: '#d4d4d4' }}>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Arquitectura de Código (Nutrition App):</h3>
+          <div className="code-block" style={{ fontSize: '0.75rem' }}>
             {/* HTML Part */}
-            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// Estructura (HTML5)</div>
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// HTML5 (Estructura y Etiquetas)</div>
             <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#808080' }}>{'<'}</span>
+              <span style={{ color: '#808080' }}>{"<"}</span>
+              <span style={{ color: '#569cd6' }}>head</span>
+              <span style={{ color: '#808080' }}>{">"}</span>...
+              <span style={{ color: '#808080' }}>{"</"}</span>
+              <span style={{ color: '#569cd6' }}>head</span>
+              <span style={{ color: '#808080' }}>{">"}</span>
+              <CodeTooltip tooltipText="Contiene información técnica (título, fuentes, estilos) que no se ve directamente en la página."> [Head Tag]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#808080' }}>{"<"}</span>
+              <span style={{ color: '#569cd6' }}>h1</span>
+              <span style={{ color: '#808080' }}>{">"}</span>Mi Título
+              <span style={{ color: '#808080' }}>{"</"}</span>
+              <span style={{ color: '#569cd6' }}>h1</span>
+              <span style={{ color: '#808080' }}>{">"}</span>
+              <CodeTooltip tooltipText="Define el encabezado más importante de una página. Solo debe haber uno por página."> [H1 Heading]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#808080' }}>{"<"}</span>
               <span style={{ color: '#569cd6' }}>div</span> 
               <span style={{ color: '#9cdcfe' }}> id</span>=<span style={{ color: '#ce9178' }}>"root"</span>
-              <span style={{ color: '#808080' }}>{'>'}{'</'}</span>
+              <span style={{ color: '#808080' }}>{">"}{"</"}</span>
               <span style={{ color: '#569cd6' }}>div</span>
-              <span style={{ color: '#808080' }}>{'>'}</span>
-              <CodeTooltip tooltipText="Punto de montaje de React"> [React Entry]</CodeTooltip>
+              <span style={{ color: '#808080' }}>{">"}</span>
+              <CodeTooltip tooltipText="'div' es un contenedor genérico. 'id' es un nombre único para identificarlo."> [Container div]</CodeTooltip>
             </div>
             <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>
-              <span style={{ color: '#808080' }}>{'<'}</span>
+              <span style={{ color: '#808080' }}>{"<"}</span>
               <span style={{ color: '#569cd6' }}>script</span> 
-              <span style={{ color: '#9cdcfe' }}> src</span>=<span style={{ color: '#ce9178' }}>"/main.tsx"</span>
-              <span style={{ color: '#808080' }}>{'>'}{'</'}</span>
+              <span style={{ color: '#9cdcfe' }}> src</span>=<span style={{ color: '#ce9178' }}>"..."</span>
+              <span style={{ color: '#808080' }}>{">"}{"</"}</span>
               <span style={{ color: '#569cd6' }}>script</span>
-              <span style={{ color: '#808080' }}>{'>'}</span>
+              <span style={{ color: '#808080' }}>{">"}</span>
+              <CodeTooltip tooltipText="Etiqueta para incluir archivos de JavaScript y dar interactividad."> [Script Tag]</CodeTooltip>
             </div>
 
             {/* CSS Part */}
-            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// Estilos y Variables (CSS3)</div>
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// CSS3 (Estilos y Diseño)</div>
             <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#d16969' }}>@theme</span> {' {'}
+              <span style={{ color: '#dcdcaa' }}>.mi-clase</span> {" {"}
+              <CodeTooltip tooltipText="Selecciona todos los elementos con el atributo class='mi-clase'."> [Selector]</CodeTooltip>
             </div>
             <div style={{ paddingLeft: '2rem' }}>
-              <span style={{ color: '#9cdcfe' }}>--color-primary</span>: <span style={{ color: '#ce9178' }}>#0f5238</span>;
-              <CodeTooltip tooltipText="Variable global de color"> [Primary]</CodeTooltip>
+              <span style={{ color: '#9cdcfe' }}>color</span>: <span style={{ color: '#ce9178' }}>blue</span>;
+              <CodeTooltip tooltipText="Propiedad que cambia el color del texto."> [Property]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>{'}'}</div>
+            <div style={{ paddingLeft: '2rem' }}>
+              <span style={{ color: '#9cdcfe' }}>display</span>: <span style={{ color: '#ce9178' }}>flex</span>;
+              <CodeTooltip tooltipText="Activa un modo de diseño flexible para alinear elementos fácilmente."> [Flexbox]</CodeTooltip>
+            </div>
+            <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>{"}"}</div>
 
             {/* JS Part */}
-            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// Lógica de Estado (ES6+)</div>
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// JavaScript (Lógica y Funciones)</div>
             <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#569cd6' }}>const</span> [user, setUser] = <span style={{ color: '#dcdcaa' }}>useState</span>(<span style={{ color: '#569cd6' }}>null</span>);
+              <span style={{ color: '#569cd6' }}>function</span> <span style={{ color: '#dcdcaa' }}>saludar</span>() {"{"}
+              <CodeTooltip tooltipText="'function' agrupa instrucciones para ejecutarlas cuando sea necesario llamándolas por su nombre."> [Function]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#569cd6' }}>const</span> <span style={{ color: '#dcdcaa' }}>login</span> = (d) ={'>'} <span style={{ color: '#dcdcaa' }}>setUser</span>(d);
-              <CodeTooltip tooltipText="Función de flecha moderna"> [Arrow Fn]</CodeTooltip>
+            <div style={{ paddingLeft: '2rem' }}>
+              <span style={{ color: '#9cdcfe' }}>console</span>.<span style={{ color: '#dcdcaa' }}>log</span>(<span style={{ color: '#ce9178' }}>"Hola"</span>);
+              <CodeTooltip tooltipText="Muestra un mensaje en la consola del navegador para depuración."> [Log]</CodeTooltip>
             </div>
+            <div style={{ paddingLeft: '1rem' }}>{"}"}</div>
           </div>
         </motion.div>
       </div>
@@ -1229,7 +1364,7 @@ const slidesData = [
     title: "Tecnologías de Soporte",
     subtitle: "Herramientas de Desarrollo",
     content: (
-      <div className="grid-content" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '2rem', width: '100%', maxWidth: '900px', margin: '0 auto' }}>
+      <div className="grid-content" style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
         <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
           <div style={{ flex: 1 }}>
             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="Vite"/>
@@ -1238,7 +1373,7 @@ const slidesData = [
               <strong>Propósito:</strong> Acelerar el desarrollo eliminando tiempos de espera en compilación.
             </p>
           </div>
-          <div className="code-block" style={{ fontSize: '0.75rem', padding: '0.8rem', textAlign: 'left', background: '#2c2a29', color: '#fff' }}>
+          <div className="code-block">
             <span style={{ color: '#888' }}># Crear proyecto</span>
             <br />npm create vite@latest
           </div>
@@ -1252,7 +1387,7 @@ const slidesData = [
               <strong>Propósito:</strong> Instalar y gestionar todas las librerías necesarias para que la app funcione.
             </p>
           </div>
-          <div className="code-block" style={{ fontSize: '0.75rem', padding: '0.8rem', textAlign: 'left', background: '#2c2a29', color: '#fff' }}>
+          <div className="code-block">
             <span style={{ color: '#888' }}># Instalar dependencia</span>
             <br />npm install {"<nombre>"}
           </div>
