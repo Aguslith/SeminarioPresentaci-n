@@ -1206,6 +1206,7 @@ const slidesData = [
               { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
               { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
               { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
+              { name: "Vercel", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" },
               { name: "Rocky Linux", icon: "/logos/Rocky_Linux_wordmark.svg" },
               { name: "n8n", icon: "/logos/N8n-logo-new.svg.png" }
             ].concat([
@@ -1213,6 +1214,7 @@ const slidesData = [
               { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
               { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
               { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
+              { name: "Vercel", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" },
               { name: "Rocky Linux", icon: "/logos/Rocky_Linux_wordmark.svg" },
               { name: "n8n", icon: "/logos/N8n-logo-new.svg.png" }
             ]).map((tech, index) => (
@@ -1285,77 +1287,55 @@ const slidesData = [
           </motion.div>
         </div>
 
-        <motion.div variants={itemVariants} className="info-card" style={{ marginTop: '0.5rem' }}>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Arquitectura de Código (Nutrition App):</h3>
-          <div className="code-block" style={{ fontSize: '0.75rem' }}>
-            {/* HTML Part */}
-            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// HTML5 (Estructura y Etiquetas)</div>
-            <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#808080' }}>{"<"}</span>
-              <span style={{ color: '#569cd6' }}>head</span>
-              <span style={{ color: '#808080' }}>{">"}</span>...
-              <span style={{ color: '#808080' }}>{"</"}</span>
-              <span style={{ color: '#569cd6' }}>head</span>
-              <span style={{ color: '#808080' }}>{">"}</span>
-              <CodeTooltip tooltipText="Contiene información técnica (título, fuentes, estilos) que no se ve directamente en la página."> [Head Tag]</CodeTooltip>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', width: '100%', marginTop: '1rem' }}>
+          {/* HTML Block */}
+          <motion.div variants={itemVariants} className="code-block" style={{ fontSize: '0.65rem', padding: '1rem', minHeight: '180px' }}>
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '8px' }}>// HTML5 (Estructura)</div>
+            <div>
+              <span style={{ color: '#808080' }}>{"<"}</span><span style={{ color: '#569cd6' }}>head</span><span style={{ color: '#808080' }}>{">"}</span>...<span style={{ color: '#808080' }}>{"</"}</span><span style={{ color: '#569cd6' }}>head</span><span style={{ color: '#808080' }}>{">"}</span>
+              <CodeTooltip tooltipText="Metadatos técnicos."> [Head]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#808080' }}>{"<"}</span>
-              <span style={{ color: '#569cd6' }}>h1</span>
-              <span style={{ color: '#808080' }}>{">"}</span>Mi Título
-              <span style={{ color: '#808080' }}>{"</"}</span>
-              <span style={{ color: '#569cd6' }}>h1</span>
-              <span style={{ color: '#808080' }}>{">"}</span>
-              <CodeTooltip tooltipText="Define el encabezado más importante de una página. Solo debe haber uno por página."> [H1 Heading]</CodeTooltip>
+            <div>
+              <span style={{ color: '#808080' }}>{"<"}</span><span style={{ color: '#569cd6' }}>h1</span><span style={{ color: '#808080' }}>{">"}</span>Título<span style={{ color: '#808080' }}>{"</"}</span><span style={{ color: '#569cd6' }}>h1</span><span style={{ color: '#808080' }}>{">"}</span>
+              <CodeTooltip tooltipText="Título principal."> [H1]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#808080' }}>{"<"}</span>
-              <span style={{ color: '#569cd6' }}>div</span> 
-              <span style={{ color: '#9cdcfe' }}> id</span>=<span style={{ color: '#ce9178' }}>"root"</span>
-              <span style={{ color: '#808080' }}>{">"}{"</"}</span>
-              <span style={{ color: '#569cd6' }}>div</span>
-              <span style={{ color: '#808080' }}>{">"}</span>
-              <CodeTooltip tooltipText="'div' es un contenedor genérico. 'id' es un nombre único para identificarlo."> [Container div]</CodeTooltip>
+            <div>
+              <span style={{ color: '#808080' }}>{"<"}</span><span style={{ color: '#569cd6' }}>div</span><span style={{ color: '#9cdcfe' }}> id</span>=<span style={{ color: '#ce9178' }}>"root"</span><span style={{ color: '#808080' }}>{">"}{"</"}</span><span style={{ color: '#569cd6' }}>div</span><span style={{ color: '#808080' }}>{">"}</span>
+              <CodeTooltip tooltipText="Contenedor React."> [Root]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>
-              <span style={{ color: '#808080' }}>{"<"}</span>
-              <span style={{ color: '#569cd6' }}>script</span> 
-              <span style={{ color: '#9cdcfe' }}> src</span>=<span style={{ color: '#ce9178' }}>"..."</span>
-              <span style={{ color: '#808080' }}>{">"}{"</"}</span>
-              <span style={{ color: '#569cd6' }}>script</span>
-              <span style={{ color: '#808080' }}>{">"}</span>
-              <CodeTooltip tooltipText="Etiqueta para incluir archivos de JavaScript y dar interactividad."> [Script Tag]</CodeTooltip>
-            </div>
+          </motion.div>
 
-            {/* CSS Part */}
-            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// CSS3 (Estilos y Diseño)</div>
-            <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#dcdcaa' }}>.mi-clase</span> {" {"}
-              <CodeTooltip tooltipText="Selecciona todos los elementos con el atributo class='mi-clase'."> [Selector]</CodeTooltip>
+          {/* CSS Block */}
+          <motion.div variants={itemVariants} className="code-block" style={{ fontSize: '0.65rem', padding: '1rem', minHeight: '180px' }}>
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '8px' }}>// CSS3 (Estilos)</div>
+            <div>
+              <span style={{ color: '#dcdcaa' }}>.card</span> {" {"}
+              <CodeTooltip tooltipText="Selector de clase."> [Class]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '2rem' }}>
+            <div style={{ paddingLeft: '1rem' }}>
               <span style={{ color: '#9cdcfe' }}>color</span>: <span style={{ color: '#ce9178' }}>blue</span>;
-              <CodeTooltip tooltipText="Propiedad que cambia el color del texto."> [Property]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '2rem' }}>
-              <span style={{ color: '#9cdcfe' }}>display</span>: <span style={{ color: '#ce9178' }}>flex</span>;
-              <CodeTooltip tooltipText="Activa un modo de diseño flexible para alinear elementos fácilmente."> [Flexbox]</CodeTooltip>
-            </div>
-            <div style={{ paddingLeft: '1rem', marginBottom: '1rem' }}>{"}"}</div>
-
-            {/* JS Part */}
-            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '4px' }}>// JavaScript (Lógica y Funciones)</div>
             <div style={{ paddingLeft: '1rem' }}>
-              <span style={{ color: '#569cd6' }}>function</span> <span style={{ color: '#dcdcaa' }}>saludar</span>() {"{"}
-              <CodeTooltip tooltipText="'function' agrupa instrucciones para ejecutarlas cuando sea necesario llamándolas por su nombre."> [Function]</CodeTooltip>
+              <span style={{ color: '#9cdcfe' }}>display</span>: <span style={{ color: '#ce9178' }}>flex</span>;
+              <CodeTooltip tooltipText="Diseño flexible."> [Flex]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '2rem' }}>
-              <span style={{ color: '#9cdcfe' }}>console</span>.<span style={{ color: '#dcdcaa' }}>log</span>(<span style={{ color: '#ce9178' }}>"Hola"</span>);
-              <CodeTooltip tooltipText="Muestra un mensaje en la consola del navegador para depuración."> [Log]</CodeTooltip>
+            <div>{"}"}</div>
+          </motion.div>
+
+          {/* JS Block */}
+          <motion.div variants={itemVariants} className="code-block" style={{ fontSize: '0.65rem', padding: '1rem', minHeight: '180px' }}>
+            <div style={{ color: '#6a9955', fontStyle: 'italic', marginBottom: '8px' }}>// JS (Lógica)</div>
+            <div>
+              <span style={{ color: '#569cd6' }}>function</span> <span style={{ color: '#dcdcaa' }}>init</span>() {"{"}
+              <CodeTooltip tooltipText="Agrupa lógica."> [Fn]</CodeTooltip>
             </div>
-            <div style={{ paddingLeft: '1rem' }}>{"}"}</div>
-          </div>
-        </motion.div>
+            <div style={{ paddingLeft: '1rem' }}>
+              <span style={{ color: '#9cdcfe' }}>console</span>.<span style={{ color: '#dcdcaa' }}>log</span>(<span style={{ color: '#ce9178' }}>"Ok"</span>);
+              <CodeTooltip tooltipText="Mensaje consola."> [Log]</CodeTooltip>
+            </div>
+            <div>{"}"}</div>
+          </motion.div>
+        </div>
       </div>
     )
   },
@@ -1364,7 +1344,7 @@ const slidesData = [
     title: "Tecnologías de Soporte",
     subtitle: "Herramientas de Desarrollo",
     content: (
-      <div className="grid-content" style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
+      <div className="grid-content" style={{ width: '100%', maxWidth: '1100px', margin: '0 auto', gridTemplateColumns: 'repeat(2, 1fr)' }}>
         <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
           <div style={{ flex: 1 }}>
             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="Vite"/>
@@ -1392,6 +1372,34 @@ const slidesData = [
             <br />npm install {"<nombre>"}
           </div>
         </motion.div>
+
+        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <div style={{ flex: 1 }}>
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="Vercel"/>
+            <h4 style={{ fontSize: '1.4rem' }}>Vercel</h4>
+            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
+              <strong>Propósito:</strong> Despliegue continuo y hosting optimizado para aplicaciones frontend.
+            </p>
+          </div>
+          <div className="code-block">
+            <span style={{ color: '#888' }}># Desplegar app</span>
+            <br />vercel deploy
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ width: '50px', height: '50px', background: 'linear-gradient(135deg, #000, #333)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', color: 'white', fontWeight: 800 }}>AG</div>
+            <h4 style={{ fontSize: '1.4rem' }}>Antigravity</h4>
+            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
+              <strong>Propósito:</strong> Asistente de IA para el desarrollo y optimización de código en tiempo real.
+            </p>
+          </div>
+          <div className="code-block">
+            <span style={{ color: '#888' }}># Modo de trabajo</span>
+            <br />Pair Programming con IA
+          </div>
+        </motion.div>
       </div>
     )
   },
@@ -1400,6 +1408,113 @@ const slidesData = [
     title: "Herramientas de uso",
     subtitle: "Click en un cuadro para profundizar",
     content: (props) => <EcosystemGrid {...props} />
+  },
+  {
+    id: 4,
+    title: "n8n - Detalle del Flujo (1/9)",
+    subtitle: "Configuración inicial y Webhook",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n1.jpeg" alt="n8n step 1" />
+      </div>
+    )
+  },
+  {
+    id: 5,
+    title: "n8n - Detalle del Flujo (2/9)",
+    subtitle: "Extracción de datos del usuario",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n2.jpeg" alt="n8n step 2" />
+      </div>
+    )
+  },
+  {
+    id: 6,
+    title: "n8n - Detalle del Flujo (3/9)",
+    subtitle: "Procesamiento de IA - Análisis nutricional",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n3.jpeg" alt="n8n step 3" />
+      </div>
+    )
+  },
+  {
+    id: 7,
+    title: "n8n - Detalle del Flujo (4/9)",
+    subtitle: "Generación del plan de comidas",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n4.jpeg" alt="n8n step 4" />
+      </div>
+    )
+  },
+  {
+    id: 8,
+    title: "n8n - Detalle del Flujo (5/9)",
+    subtitle: "Validación de macronutrientes",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n5.jpeg" alt="n8n step 5" />
+      </div>
+    )
+  },
+  {
+    id: 9,
+    title: "n8n - Detalle del Flujo (6/9)",
+    subtitle: "Formateo del documento PDF",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n6.jpeg" alt="n8n step 6" />
+      </div>
+    )
+  },
+  {
+    id: 10,
+    title: "n8n - Detalle del Flujo (7/9)",
+    subtitle: "Integración con servicios de Email",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n7.jpeg" alt="n8n step 7" />
+      </div>
+    )
+  },
+  {
+    id: 11,
+    title: "n8n - Detalle del Flujo (8/9)",
+    subtitle: "Almacenamiento de logs y reportes",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n8.jpeg" alt="n8n step 8" />
+      </div>
+    )
+  },
+  {
+    id: 12,
+    title: "n8n - Detalle del Flujo (9/9)",
+    subtitle: "Finalización del proceso",
+    content: (
+      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ZoomableImage src="/images/n8n/imagenn8n9.jpeg" alt="n8n step 9" />
+      </div>
+    )
+  },
+  {
+    id: 13,
+    title: "¡Muchas Gracias!",
+    subtitle: "Preguntas y dudas",
+    content: (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center' }}>
+        <motion.div 
+          animate={{ scale: [1, 1.05, 1] }} 
+          transition={{ duration: 4, repeat: Infinity }}
+          style={{ fontSize: '4rem', fontWeight: 800, background: 'linear-gradient(to right, #8B7355, #D4A373)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+        >
+          ¿Consultas?
+        </motion.div>
+        <p style={{ marginTop: '2rem', fontSize: '1.2rem', color: '#666' }}>Fin de la presentación</p>
+      </div>
+    )
   }
 ];
 
