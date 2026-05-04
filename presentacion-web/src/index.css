@@ -327,10 +327,12 @@ body {
     margin-bottom: 0.5rem;
   }
   .slide {
-    height: 90vh; /* Use vh for more reliable mobile height */
-    padding: 1rem;
-    justify-content: flex-start; /* Start from top to allow scrolling down */
-    padding-top: 2rem;
+    height: 92vh;
+    padding: 1.5rem 1rem;
+    justify-content: flex-start;
+    overflow-y: auto; /* Enable scrolling on mobile */
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   .slide-content-wrapper {
     justify-content: flex-start;
@@ -357,8 +359,11 @@ body {
     gap: 1rem;
   }
   .sub-slide-card {
-    padding: 1.5rem;
+    padding: 1.2rem;
     min-height: 200px;
+    max-height: 75vh;
+    overflow-y: auto; /* Enable internal scrolling on mobile cards if needed */
+    -webkit-overflow-scrolling: touch;
   }
   .sub-slide-card h4 {
     font-size: 1.5rem;
@@ -374,6 +379,11 @@ body {
     transform-origin: left bottom;
     bottom: 0.5rem !important;
     left: 0.5rem !important;
+  }
+  
+  .expanded-ecosystem {
+    overflow-y: auto !important;
+    padding: 1rem;
   }
 }
 
