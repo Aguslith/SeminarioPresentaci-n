@@ -1740,70 +1740,99 @@ const slidesData = [
   },
   {
     id: 5,
-    title: "Nuestro Proyecto",
-    subtitle: "Analizar con QR o acceder al link",
+    title: "Nuestros Proyectos",
+    subtitle: "Analizar con QR o acceder a los links",
     content: (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', gap: '2rem' }}>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          style={{ 
-            background: 'white', 
-            padding: '3rem', 
-            borderRadius: '32px', 
-            boxShadow: '0 25px 60px rgba(0,0,0,0.1)',
-            border: '1px solid rgba(139, 115, 85, 0.1)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '2rem',
-            maxWidth: '500px'
-          }}
-        >
-          <div style={{ padding: '1.5rem', background: '#fdfbf9', borderRadius: '24px', border: '2px solid #f0e6da', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.02)' }}>
-            <img 
-              src="/images/qr_proyecto.png" 
-              alt="QR Code Proyecto" 
-              style={{ width: '250px', height: '250px', display: 'block', borderRadius: '12px' }}
-            />
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center' }}>
-              <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to right, transparent, #D4A373)' }}></div>
-              <span style={{ fontSize: '0.8rem', color: '#8B7355', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px' }}>O ESCANEA</span>
-              <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to left, transparent, #D4A373)' }}></div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', gap: '1.5rem', width: '100%' }}>
+        <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', width: '100%', flexWrap: 'wrap' }}>
+          {/* First QR - App Nutricional */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            style={{ 
+              background: 'white', 
+              padding: '1.5rem', 
+              borderRadius: '24px', 
+              boxShadow: '0 15px 35px rgba(0,0,0,0.08)',
+              border: '1px solid var(--card-border)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem',
+              flex: '1',
+              maxWidth: '350px'
+            }}
+          >
+            <div style={{ padding: '1rem', background: '#fdfbf9', borderRadius: '16px', border: '1px solid #f0e6da' }}>
+              <img src="/images/qr_proyecto.png" alt="QR App Nutricional" style={{ width: '180px', height: '180px', borderRadius: '8px', display: 'block' }} />
             </div>
-            
+            <div style={{ fontSize: '0.8rem', color: '#8B7355', fontWeight: 800 }}>APP NUTRICIONAL</div>
             <a 
               href="https://webappseminario.vercel.app/" 
               target="_blank" 
-              rel="noopener noreferrer"
+              rel="noopener noreferrer" 
+              className="back-btn" 
               style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                gap: '12px', 
+                fontSize: '0.85rem', 
+                padding: '0.8rem 1.5rem', 
                 background: 'linear-gradient(135deg, #8B7355, #D4A373)', 
-                color: 'white', 
-                padding: '16px 32px', 
-                borderRadius: '100px', 
-                textDecoration: 'none', 
-                fontWeight: 800,
-                fontSize: '1.1rem',
-                boxShadow: '0 15px 30px rgba(139, 115, 85, 0.3)',
-                transition: 'all 0.3s ease',
-                width: '100%'
+                color: 'white',
+                width: '100%',
+                justifyContent: 'center',
+                textDecoration: 'none',
+                fontWeight: 700,
+                borderRadius: '50px'
               }}
-              onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
-              onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
-              <Share2 size={22} />
-              Analizar Proyecto
+               Acceder App
             </a>
-          </div>
-        </motion.div>
+          </motion.div>
+
+          {/* Second QR - Presentación Web */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            style={{ 
+              background: 'white', 
+              padding: '1.5rem', 
+              borderRadius: '24px', 
+              boxShadow: '0 15px 35px rgba(0,0,0,0.08)',
+              border: '1px solid var(--card-border)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem',
+              flex: '1',
+              maxWidth: '350px'
+            }}
+          >
+            <div style={{ padding: '1rem', background: '#fdfbf9', borderRadius: '16px', border: '1px solid #f0e6da' }}>
+              <img src="/images/seminarioappqr.jpg" alt="QR Presentación" style={{ width: '180px', height: '180px', borderRadius: '8px', display: 'block' }} />
+            </div>
+            <div style={{ fontSize: '0.8rem', color: '#8B7355', fontWeight: 800 }}>PRESENTACIÓN WEB</div>
+            <a 
+              href="https://seminario-presentaci-n.vercel.app" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="back-btn" 
+              style={{ 
+                fontSize: '0.85rem', 
+                padding: '0.8rem 1.5rem', 
+                background: 'linear-gradient(135deg, #8B7355, #D4A373)', 
+                color: 'white',
+                width: '100%',
+                justifyContent: 'center',
+                textDecoration: 'none',
+                fontWeight: 700,
+                borderRadius: '50px'
+              }}
+            >
+               Acceder Web
+            </a>
+          </motion.div>
+        </div>
       </div>
     )
   }
