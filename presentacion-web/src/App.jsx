@@ -1816,6 +1816,10 @@ export default function App() {
   const [[page, direction], setPage] = useState([0, 0]);
   const [selectedEcoItem, setSelectedEcoItem] = useState(null);
   const [theme, setTheme] = useState('beige');
+  
+  // Touch swipe states
+  const touchStart = useRef(0);
+  const touchEnd = useRef(0);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -1861,12 +1865,41 @@ export default function App() {
     return () => window.removeEventListener('wheel', handleWheel);
   }, [page, selectedEcoItem]);
 
+  const handleTouchStart = (e) => {
+    touchStart.current = e.targetTouches[0].clientX;
+    touchEnd.current = e.targetTouches[0].clientX; // Reset end point
+  };
+
+  const handleTouchMove = (e) => {
+    touchEnd.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (selectedEcoItem) return; // Don't swipe when looking at detailed content
+    
+    const distance = touchStart.current - touchEnd.current;
+    const minSwipeDistance = 50;
+
+    if (distance > minSwipeDistance) {
+      // Swiped Left -> Next Slide
+      paginate(1);
+    } else if (distance < -minSwipeDistance) {
+      // Swiped Right -> Previous Slide
+      paginate(-1);
+    }
+  };
+
   const displayTitle = selectedEcoItem ? selectedEcoItem.title : currentSlide.title;
   const displayLogo = selectedEcoItem ? selectedEcoItem.logo : currentSlide.logo;
   const displaySubtitle = selectedEcoItem ? "" : currentSlide.subtitle;
 
   return (
-    <div className="presentation-container">
+    <div 
+      className="presentation-container"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="blob blob-1"></div>
       <div className="blob blob-2"></div>
       <div className="slide-container">

@@ -59,7 +59,8 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  overflow: hidden; /* No scrolling */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+  overflow-x: hidden;
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   position: absolute;
   will-change: transform, opacity;
@@ -214,7 +215,7 @@ body {
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .nav-controls {
@@ -231,14 +232,20 @@ body {
 
 .nav-zone {
   pointer-events: auto;
-  width: 50px;
+  width: 100px;
   height: 100%;
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: absolute;
   z-index: 2000;
+  opacity: 0.3;
+}
+
+.nav-zone:hover {
+  opacity: 1;
+  width: 120px;
 }
 
 .nav-left {
@@ -308,7 +315,7 @@ body {
     font-size: 2.5rem;
   }
   .nav-zone {
-    width: 10%;
+    width: 80px;
   }
 }
 
@@ -676,12 +683,23 @@ body {
   width: 100%;
   max-width: 850px;
   max-height: 80vh;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   position: relative;
   border: 1px solid rgba(212, 163, 115, 0.1);
+}
+
+.slide::-webkit-scrollbar, .sub-slide-card::-webkit-scrollbar, .expanded-ecosystem::-webkit-scrollbar {
+  width: 4px;
+}
+.slide::-webkit-scrollbar-thumb, .sub-slide-card::-webkit-scrollbar-thumb, .expanded-ecosystem::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 10px;
+}
+.slide::-webkit-scrollbar-thumb:hover, .sub-slide-card::-webkit-scrollbar-thumb:hover, .expanded-ecosystem::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
 }
 
 
