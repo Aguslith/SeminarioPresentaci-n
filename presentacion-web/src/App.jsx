@@ -1,7 +1,276 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database, Lock, Link, Globe, Sparkles, CheckCircle2, Activity, Server, Monitor, HardDrive, Mail, Shield, Share2, Brain, Code, FileText, Layout, RefreshCcw, Search, ZoomIn, MousePointer2, PenTool, Eraser, Wand2, Trash2, Cpu, Box, Layers } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, Atom, Rocket, Zap, Eye, Database, Lock, Link, Globe, Sparkles, CheckCircle2, Activity, Server, Monitor, HardDrive, Mail, Shield, Share2, Brain, Code, FileText, Layout, RefreshCcw, Search, ZoomIn, MousePointer2, PenTool, Eraser, Wand2, Trash2, Cpu, Box, Layers, Users, Palette } from 'lucide-react';
 import './index.css';
+
+const THEMES = {
+  beige: {
+    name: "Beige",
+    color: "#D4A373",
+    vars: {
+      '--bg-main': '#FDFBF7',
+      '--bg-gradient': '#F5EFE6',
+      '--accent-primary': '#D4A373',
+      '--accent-secondary': '#8B7355',
+      '--text-main': '#2C2A29',
+      '--text-muted': '#5A5650',
+      '--card-bg': 'rgba(255, 255, 255, 0.85)',
+      '--card-border': 'rgba(212, 163, 115, 0.2)',
+    }
+  },
+  dark: {
+    name: "Dark",
+    color: "#1a1a1a",
+    vars: {
+      '--bg-main': '#050505',
+      '--bg-gradient': '#0f0f0f',
+      '--accent-primary': '#61dafb',
+      '--accent-secondary': '#4fa8c7',
+      '--text-main': '#ffffff',
+      '--text-muted': '#a0a0a0',
+      '--card-bg': 'rgba(20, 20, 20, 0.9)',
+      '--card-border': 'rgba(255, 255, 255, 0.1)',
+    }
+  },
+  emerald: {
+    name: "Esmeralda",
+    color: "#10b981",
+    vars: {
+      '--bg-main': '#f0fdf4',
+      '--bg-gradient': '#dcfce7',
+      '--accent-primary': '#10b981',
+      '--accent-secondary': '#059669',
+      '--text-main': '#064e3b',
+      '--text-muted': '#065f46',
+      '--card-bg': 'rgba(255, 255, 255, 0.9)',
+      '--card-border': 'rgba(16, 185, 129, 0.2)',
+    }
+  },
+  ocean: {
+    name: "Océano",
+    color: "#0ea5e9",
+    vars: {
+      '--bg-main': '#f0f9ff',
+      '--bg-gradient': '#e0f2fe',
+      '--accent-primary': '#0ea5e9',
+      '--accent-secondary': '#0284c7',
+      '--text-main': '#0c4a6e',
+      '--text-muted': '#075985',
+      '--card-bg': 'rgba(255, 255, 255, 0.9)',
+      '--card-border': 'rgba(14, 165, 233, 0.2)',
+    }
+  }
+};
+
+const ThemeSwitcher = ({ currentTheme, onThemeChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div style={{ position: 'fixed', top: '2.5rem', right: '2.5rem', zIndex: 9999 }}>
+      <motion.div 
+        animate={{ width: isOpen ? 'auto' : '50px' }}
+        style={{ 
+          background: 'var(--card-bg)', 
+          backdropFilter: 'blur(10px)',
+          borderRadius: '100px', 
+          padding: '8px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+          border: '1px solid var(--card-border)',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap'
+        }}
+      >
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          style={{ 
+            background: 'var(--accent-primary)', 
+            border: 'none', 
+            borderRadius: '50%', 
+            width: '34px', 
+            height: '34px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            cursor: 'pointer',
+            color: 'white',
+            flexShrink: 0
+          }}
+        >
+          <Palette size={18} />
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              style={{ display: 'flex', gap: '8px', paddingRight: '8px' }}
+            >
+              {Object.entries(THEMES).map(([key, theme]) => (
+                <button
+                  key={key}
+                  onClick={() => { onThemeChange(key); setIsOpen(false); }}
+                  style={{
+                    background: theme.vars['--bg-main'],
+                    border: `2px solid ${currentTheme === key ? theme.color : 'transparent'}`,
+                    padding: '6px 12px',
+                    borderRadius: '50px',
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    color: theme.vars['--text-main'],
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  {theme.name}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
+  );
+};
+
+const toolsData = [
+  {
+    name: "Vite",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg",
+    color: "#646cff",
+    description: "Acelerar el desarrollo eliminando tiempos de espera en compilación.",
+    command: "npm create vite@latest"
+  },
+  {
+    name: "npm",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/npm/npm-original-wordmark.svg",
+    color: "#cb3837",
+    description: "Instalar y gestionar todas las librerías necesarias para que la app funcione.",
+    command: "npm install <nombre>"
+  },
+  {
+    name: "Vercel",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg",
+    color: "#000000",
+    description: "Despliegue continuo y hosting optimizado para aplicaciones frontend.",
+    command: "vercel deploy"
+  },
+  {
+    name: "Antigravity",
+    logo: null,
+    isAntigravity: true,
+    color: "#333",
+    description: "Asistente de IA para el desarrollo y optimización de código en tiempo real.",
+    command: "Pair Programming con IA"
+  }
+];
+
+const ToolsCarousel = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % toolsData.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const tool = toolsData[index];
+
+  return (
+    <div style={{ width: '100%', maxWidth: '650px', margin: '0 auto', perspective: '2000px', padding: '1rem 0' }}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, rotateY: 110, scale: 0.8, x: 150 }}
+          animate={{ opacity: 1, rotateY: 0, scale: 1, x: 0 }}
+          exit={{ opacity: 0, rotateY: -110, scale: 0.8, x: -150 }}
+          transition={{ 
+            duration: 1.8, 
+            ease: [0.16, 1, 0.3, 1] 
+          }}
+          className="info-card"
+          style={{ 
+            minHeight: '420px', 
+            width: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '3rem',
+            background: 'white',
+            borderRadius: '40px',
+            boxShadow: '0 40px 80px -15px rgba(139, 115, 85, 0.25)',
+            border: '1px solid rgba(212, 163, 115, 0.25)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, width: '150px', height: '150px', background: `radial-gradient(circle at top right, ${tool.color}11, transparent)`, borderRadius: '0 40px 0 100%' }} />
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+            {tool.isAntigravity ? (
+              <motion.div 
+                animate={{ rotateY: [0, 360] }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                style={{ width: '80px', height: '80px', background: 'linear-gradient(135deg, #000, #333)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'white', fontWeight: 800, fontSize: '2rem', boxShadow: '0 15px 30px rgba(0,0,0,0.3)' }}
+              >
+                AG
+              </motion.div>
+            ) : (
+              <motion.img 
+                src={tool.logo} 
+                style={{ height: '80px', marginBottom: '1.5rem', objectFit: 'contain' }} 
+                alt={tool.name}
+                animate={{ 
+                  rotateY: [0, 360],
+                  y: [0, -10, 0]
+                }}
+                transition={{ 
+                  rotateY: { duration: 12, repeat: Infinity, ease: "linear" },
+                  y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                }}
+              />
+            )}
+            <h4 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: tool.color, fontWeight: 800, letterSpacing: '-0.02em' }}>{tool.name}</h4>
+            <p style={{ fontSize: '1.15rem', color: '#5A5650', marginBottom: '2.5rem', lineHeight: 1.6, maxWidth: '90%', fontWeight: 500 }}>
+              {tool.description}
+            </p>
+          </div>
+          <div className="code-block" style={{ width: '100%', textAlign: 'center', background: '#1a1a1a', padding: '1.5rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)' }}>
+            <span style={{ color: '#888', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 700, marginBottom: '8px', display: 'block' }}>
+              {tool.name === 'Antigravity' ? 'Metodología' : 'Comando'}
+            </span>
+            <code style={{ fontSize: '1.3rem', color: '#D4A373', fontWeight: 800, display: 'block' }}>{tool.command}</code>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+      
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '2.5rem' }}>
+        {toolsData.map((_, i) => (
+          <motion.div 
+            key={i} 
+            animate={{ 
+              width: i === index ? 40 : 12,
+              backgroundColor: i === index ? '#8B7355' : '#D4A37344',
+              opacity: i === index ? 1 : 0.5
+            }}
+            style={{ 
+              height: '12px', 
+              borderRadius: '12px', 
+            }} 
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 
 const PresentationTools = ({ isVisible }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -743,46 +1012,80 @@ const ECOSYSTEM_DATA = {  nodejs: {
     color: "#68a063",
     details: [
       { 
-        title: "¿Qué es Node.js?", 
-        text: "Es un entorno de ejecución de JavaScript orientado a eventos, construido con el motor V8 de Chrome. Rompe la barrera que limitaba a JavaScript al navegador, permitiendo ejecutarlo en el servidor." 
+        title: "El Nacimiento", 
+        text: "Ryan Dahl presentó Node.js en la JSConf de 2009. Su idea fue brillante: tomó el motor V8 de Google Chrome (el más rápido para procesar JS) y lo sacó del navegador para que pudiera correr en cualquier computadora." 
       },
-      { 
-        title: "¿Cómo lo descargo?", 
-        image: "/images/nodeinstalacion/paginaoriginal.png",
+      {
+        title: "¿Qué es Node.js?",
+        text: "No es un lenguaje ni un framework. Node.js es un entorno de ejecución (Runtime) para JavaScript basado en el motor V8 de Google Chrome. Permite ejecutar código JavaScript en el lado del servidor, rompiendo la barrera histórica de ser un lenguaje exclusivo para navegadores."
+      },
+      {
+        title: "Ventajas Competitivas",
         component: (
-          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-            <p style={{ color: '#666', marginBottom: '1rem' }}>Puedes descargar la versión LTS (estable) desde el sitio oficial:</p>
-            <a 
-              href="https://nodejs.org/es" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                gap: '8px', 
-                background: '#68a063', 
-                color: 'white', 
-                padding: '10px 20px', 
-                borderRadius: '50px', 
-                textDecoration: 'none', 
-                fontWeight: 800,
-                fontSize: '0.9rem',
-                boxShadow: '0 4px 12px rgba(104, 160, 99, 0.3)'
-              }}
-            >
-              <Globe size={18} /> Ir a nodejs.org/es
-            </a>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', width: '100%' }}>
+            {[
+              { t: "JavaScript Unificado", d: "Mismo lenguaje en front y back." },
+              { t: "Alto Rendimiento", d: "Motor V8 de Chrome." },
+              { t: "Escalabilidad", d: "Ideal para microservicios." },
+              { t: "Gran Comunidad", d: "Millones de recursos." },
+              { t: "Ecosistema npm", d: "El más grande del mundo." },
+              { t: "Ligereza", d: "Mínimo consumo de recursos." }
+            ].map((v, i) => (
+              <div key={i} style={{ background: 'rgba(104, 160, 99, 0.1)', padding: '1rem', borderRadius: '12px', borderLeft: '4px solid #68a063' }}>
+                <div style={{ fontWeight: 800, color: '#68a063', marginBottom: '4px' }}>{v.t}</div>
+                <div style={{ fontSize: '0.8rem', color: '#666' }}>{v.d}</div>
+              </div>
+            ))}
           </div>
         )
       },
-      { 
-        title: "Proceso de Instalación", 
-        text: "Una vez descargado, sigue los pasos del asistente de instalación. Es un proceso sencillo de 'Siguiente' asegurándote de incluir npm (Node Package Manager).",
-        image: "/images/nodeinstalacion/instalacionnode.png"
+      {
+        title: "Arquitectura Orientada a Eventos",
+        component: (
+          <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+            {[
+              { t: "Single-Threaded", d: "Un solo hilo para miles de conexiones.", icon: <Zap size={40} color="#68a063" /> },
+              { t: "Event Loop", d: "Ciclo constante de operaciones asíncronas.", icon: <RefreshCcw size={40} color="#68a063" /> },
+              { t: "Non-blocking I/O", d: "Entrada/salida sin detener el flujo.", icon: <Shield size={40} color="#68a063" /> }
+            ].map((v, i) => (
+              <div key={i} style={{ flex: 1, background: '#1a1a1a', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', color: 'white' }}>
+                <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>{v.icon}</div>
+                <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '0.5rem' }}>{v.t}</div>
+                <div style={{ fontSize: '0.85rem', color: '#aaa', lineHeight: 1.4 }}>{v.d}</div>
+              </div>
+            ))}
+          </div>
+        )
       },
-      { 
-        title: "¿Para qué sirve?", 
-        text: "Se utiliza para construir aplicaciones de red rápidas y escalables. Es la base que sostiene nuestro backend, permitiendo manejar múltiples conexiones simultáneas y procesar datos antes de enviarlos a la base de datos o a n8n." 
+      {
+        title: "¿Cuándo usar Node.js?",
+        component: (
+          <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+            {[
+              { t: "Apps Real-time", d: "Chats y herramientas colaborativas.", img: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/socketio/socketio-original.svg" },
+              { t: "APIs REST / GraphQL", d: "Sistemas backend escalables.", img: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/graphql/graphql-plain.svg" },
+              { t: "Microservicios e IoT", d: "Manejo masivo de datos.", img: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/raspberrypi/raspberrypi-original.svg" }
+            ].map((v, i) => (
+              <div key={i} style={{ flex: 1, background: 'white', padding: '1rem', borderRadius: '16px', border: '1px solid #eee', textAlign: 'center' }}>
+                <img src={v.img} style={{ height: '60px', marginBottom: '1rem' }} alt="" />
+                <div style={{ fontWeight: 800, color: '#333', marginBottom: '0.5rem' }}>{v.t}</div>
+                <div style={{ fontSize: '0.85rem', color: '#666' }}>{v.d}</div>
+              </div>
+            ))}
+          </div>
+        )
+      },
+      {
+        title: "Visión Tecnológica",
+        component: (
+          <div style={{ textAlign: 'center', padding: '2rem', background: '#0f0f0f', borderRadius: '24px', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '1rem', left: '1rem', fontSize: '4rem', color: '#68a063', opacity: 0.2 }}>"</div>
+            <p style={{ fontSize: '1.5rem', color: '#eee', fontStyle: 'italic', position: 'relative', zIndex: 1, lineHeight: 1.6, padding: '0 2rem' }}>
+              "JavaScript es el lenguaje más accesible del mundo. Llevarlo al servidor fue el paso natural para empoderar a los desarrolladores."
+            </p>
+            <div style={{ marginTop: '1.5rem', color: '#68a063', fontWeight: 700 }}>— Visión Tecnológica de Node.js</div>
+          </div>
+        )
       },
       { 
         title: "Servidor y API (server.js)", 
@@ -830,18 +1133,92 @@ const ECOSYSTEM_DATA = {  nodejs: {
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
     color: "#61dafb",
     details: [
-      { 
-        title: "¿Qué es React?", 
-        text: "Es una biblioteca de JavaScript creada por Meta para construir interfaces de usuario (UI). Se basa en componentes reutilizables que manejan su propio estado y se actualizan de forma eficiente sin recargar la página." 
+      {
+        title: "¿Qué es React?",
+        text: (
+          <span>
+            Biblioteca de <CodeTooltip tooltipText={
+              <div style={{ lineHeight: '1.4', padding: '2px' }}>
+                <strong style={{ color: '#61dafb', display: 'block', marginBottom: '4px', fontSize: '0.85rem' }}>¿Qué es UI?</strong>
+                Es el puente visual entre el usuario y la máquina. Incluye:<br />
+                <ul style={{ paddingLeft: '1rem', margin: '4px 0', fontSize: '0.7rem', color: '#ccc' }}>
+                  <li><strong>Visuales:</strong> Colores e imágenes.</li>
+                  <li><strong>Controles:</strong> Botones y entradas.</li>
+                  <li><strong>Navegación:</strong> Menús y pestañas.</li>
+                </ul>
+              </div>
+            }>UI</CodeTooltip> Declarativa. React es una biblioteca de JavaScript de código abierto creada por Meta (Facebook). Se especializa en la construcción de interfaces de usuario interactivas mediante el uso de componentes. Su enfoque se basa en ser declarativo: tú describes cómo quieres que se vea la interfaz, y React se encarga de actualizarla eficientemente.
+          </span>
+        )
       },
-      { 
-        title: "¿Cómo lo instalo?", 
-        text: "Actualmente se recomienda usar herramientas rápidas como Vite. El comando para inicializar un proyecto moderno de React es:",
-        code: `npm create vite@latest my-app -- --template react`
+      {
+        title: "Pilares de la Tecnología",
+        component: (
+          <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+            {[
+              { t: "Componentes", d: "Bloques de construcción independientes y reutilizables.", icon: <Box size={40} color="#61dafb" /> },
+              { t: "JSX", d: "Extensión de sintaxis que combina JS con estructuras tipo HTML.", icon: <Code size={40} color="#61dafb" /> },
+              { t: "Data Flow", d: "Flujo de datos unidireccional para mayor predictibilidad.", icon: <ArrowRight size={40} color="#61dafb" style={{ transform: 'rotate(90deg)' }} /> }
+            ].map((v, i) => (
+              <div key={i} style={{ flex: 1, background: '#0a192f', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', color: 'white', border: '1px solid rgba(97, 218, 251, 0.2)' }}>
+                <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>{v.icon}</div>
+                <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '0.5rem', color: '#61dafb' }}>{v.t}</div>
+                <div style={{ fontSize: '0.85rem', color: '#8892b0', lineHeight: 1.4 }}>{v.d}</div>
+              </div>
+            ))}
+          </div>
+        )
       },
-      { 
-        title: "¿Para qué sirve?", 
-        text: "Sirve para crear aplicaciones web dinámicas y altamente interactivas (Single Page Applications). En este proyecto, se encarga de mostrar los formularios de nutrición, las gráficas y las transiciones fluidas de la app." 
+      {
+        title: "Virtual DOM",
+        component: (
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', background: '#0a192f', padding: '2rem', borderRadius: '24px', color: 'white' }}>
+            <div style={{ flex: 1 }}>
+              <h4 style={{ color: '#61dafb', fontSize: '1.5rem', marginBottom: '1rem' }}>Virtual DOM</h4>
+              <p style={{ fontSize: '0.9rem', color: '#8892b0', marginBottom: '1rem' }}>El secreto de su velocidad: React crea una copia ligera del <CodeTooltip tooltipText="Representación estructurada de una web que permite a JS manipular su contenido y estilo en tiempo real.">DOM</CodeTooltip> real en memoria.</p>
+              <p style={{ fontSize: '0.9rem', color: '#8892b0', marginBottom: '1.5rem' }}>Cuando los datos cambian, React compara el <strong>Virtual DOM</strong> con el anterior, calcula las diferencias y actualiza solo lo estrictamente necesario.</p>
+              <div style={{ background: 'rgba(97, 218, 251, 0.1)', padding: '0.8rem', borderRadius: '8px', borderLeft: '4px solid #61dafb', fontSize: '0.85rem' }}>
+                Eficiencia: Mínimo impacto en el navegador.
+              </div>
+            </div>
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+               <motion.div 
+                 animate={{ rotate: 360 }}
+                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                 style={{ width: '150px', height: '150px', borderRadius: '50%', border: '2px dashed #61dafb', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}
+               >
+                 <div style={{ width: '80px', height: '40px', background: 'linear-gradient(90deg, #61dafb, #dcdcaa)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0a192f', fontWeight: 800, fontSize: '0.7rem' }}>V-DOM</div>
+               </motion.div>
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "React Native: Más allá de la Web",
+        component: (
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', background: '#111', padding: '2rem', borderRadius: '24px', color: 'white' }}>
+            <div style={{ flex: 1 }}>
+              <h4 style={{ color: '#61dafb', fontSize: '1.5rem', marginBottom: '1rem' }}>"Learn Once, Write Anywhere"</h4>
+              <p style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '1rem' }}>En 2015, Meta lanzó React Native, permitiendo crear aplicaciones para <strong>iOS y Android</strong> usando el mismo paradigma de componentes.</p>
+              <p style={{ fontSize: '0.85rem', color: '#aaa' }}>No es un sitio web embebido; es código nativo real controlado por JavaScript.</p>
+            </div>
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+              <img src="/images/reactinstalacion/paginareact.png" style={{ width: '100%', borderRadius: '12px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }} alt="React Native Apps" />
+            </div>
+          </div>
+        )
+      },
+      {
+        title: "Visión Meta Open Source",
+        component: (
+          <div style={{ textAlign: 'center', padding: '2rem', background: '#0a192f', borderRadius: '24px', position: 'relative', overflow: 'hidden', border: '1px solid rgba(97, 218, 251, 0.1)' }}>
+            <div style={{ position: 'absolute', top: '1rem', left: '1rem', fontSize: '4rem', color: '#61dafb', opacity: 0.2 }}>"</div>
+            <p style={{ fontSize: '1.5rem', color: '#eee', fontStyle: 'italic', position: 'relative', zIndex: 1, lineHeight: 1.6, padding: '0 2rem' }}>
+              "React es un enfoque pragmático para crear interfaces de usuario, permitiendo a los desarrolladores centrarse en qué quieren mostrar, no en cómo manipular el DOM."
+            </p>
+            <div style={{ marginTop: '1.5rem', color: '#61dafb', fontWeight: 700 }}>— Visión Meta Open Source</div>
+          </div>
+        )
       },
       { 
         title: "Lógica de Interfaz (App.jsx)", 
@@ -877,35 +1254,6 @@ const ECOSYSTEM_DATA = {  nodejs: {
             </div>
             <div style={{ paddingLeft: '1rem' }}>);</div>
             <div>{'}'}</div>
-          </div>
-        )
-      },
-      { 
-        title: "¿Cómo se obtiene?", 
-        image: "/images/reactinstalacion/paginareact.png",
-        component: (
-          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-            <p style={{ color: '#666', marginBottom: '1rem' }}>Puedes consultar la documentación oficial y tutoriales en español en:</p>
-            <a 
-              href="https://es.react.dev/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                gap: '8px', 
-                background: '#61dafb', 
-                color: '#20232a', 
-                padding: '10px 20px', 
-                borderRadius: '50px', 
-                textDecoration: 'none', 
-                fontWeight: 800,
-                fontSize: '0.9rem',
-                boxShadow: '0 4px 12px rgba(97, 218, 251, 0.3)'
-              }}
-            >
-              <Globe size={18} /> Ir a es.react.dev
-            </a>
           </div>
         )
       }
@@ -1009,16 +1357,17 @@ const ECOSYSTEM_DATA = {  nodejs: {
         title: "Arquitectura del Flujo", 
         image: "/images/n8n/nodos-a-representar.jpeg" 
       },
-      { image: "/images/n8n/imagenn8n1.jpeg", title: "1" },
-      { image: "/images/n8n/imagenn8n2.jpeg", title: "2" },
-      { image: "/images/n8n/imagenn8n3.jpeg", title: "3" },
-      { image: "/images/n8n/imagenn8n4.jpeg", title: "4" },
-      { image: "/images/n8n/imagenn8n5.jpeg", title: "5" },
-      { image: "/images/n8n/imagenn8n6.jpeg", title: "6" },
-      { image: "/images/n8n/imagenn8n7.jpeg", title: "7" },
-      { image: "/images/n8n/imagenn8n8.jpeg", title: "8" },
-      { image: "/images/n8n/imagenn8n9.jpeg", title: "9" }
+      { image: "/images/n8n/imagenn8n1.jpeg", title: "1. Configuración inicial y Webhook" },
+      { image: "/images/n8n/imagenn8n2.jpeg", title: "2. Extracción de datos del usuario" },
+      { image: "/images/n8n/imagenn8n3.jpeg", title: "3. Procesamiento de IA - Análisis nutricional" },
+      { image: "/images/n8n/imagenn8n4.jpeg", title: "4. Generación del plan de comidas" },
+      { image: "/images/n8n/imagenn8n5.jpeg", title: "5. Validación de macronutrientes" },
+      { image: "/images/n8n/imagenn8n6.jpeg", title: "6. Formateo del documento PDF" },
+      { image: "/images/n8n/imagenn8n7.jpeg", title: "7. Integración con servicios de Email" },
+      { image: "/images/n8n/imagenn8n8.jpeg", title: "8. Almacenamiento de logs y reportes" },
+      { image: "/images/n8n/imagenn8n9.jpeg", title: "9. Finalización del proceso" }
     ]
+
   }
 
 
@@ -1239,8 +1588,29 @@ const slidesData = [
             ))}
           </div>
         </div>
-        <div style={{ marginTop: 'auto', paddingTop: '2rem', fontSize: '1.2rem', color: '#5A5650', fontFamily: 'Inter, sans-serif' }}>
-          <strong>Integrantes:</strong> Herrera Agustin, Simon Carrizo, Lautaro Ocampo, Gabriel Romero
+        <div style={{ marginTop: 'auto', paddingTop: '0.5rem', width: '100%' }}>
+          <div style={{ fontSize: '0.8rem', color: '#8B7355', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.5rem' }}>Integrantes</div>
+          <div className="carousel-container" style={{ margin: '0', padding: '10px 0', maskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)' }}>
+            <div className="carousel-track" style={{ animationDuration: '40s', gap: '1.5rem' }}>
+              {[
+                "Romero Gabriel Ismael", "Carrizo José SImón", "Ocampo Codosea Exequiel Lautaro", "Herrera Agustin"
+              ].concat([
+                "Romero Gabriel Ismael", "Carrizo José SImón", "Ocampo Codosea Exequiel Lautaro", "Herrera Agustin"
+              ]).map((name, index) => (
+                <div key={index} className="carousel-item" style={{ 
+                  fontSize: '0.9rem', 
+                  padding: '0.5rem 1.2rem', 
+                  background: 'white', 
+                  color: '#5A5650', 
+                  border: '1px solid rgba(139, 115, 85, 0.15)',
+                  boxShadow: '0 4px 12px rgba(139, 115, 85, 0.05)',
+                  borderRadius: '100px'
+                }}>
+                  <Users size={14} style={{ marginRight: '8px', color: '#D4A373' }} /> {name}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -1343,65 +1713,7 @@ const slidesData = [
     id: 2,
     title: "Tecnologías de Soporte",
     subtitle: "Herramientas de Desarrollo",
-    content: (
-      <div className="grid-content" style={{ width: '100%', maxWidth: '1100px', margin: '0 auto', gridTemplateColumns: 'repeat(2, 1fr)' }}>
-        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div style={{ flex: 1 }}>
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="Vite"/>
-            <h4 style={{ fontSize: '1.4rem' }}>Vite</h4>
-            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
-              <strong>Propósito:</strong> Acelerar el desarrollo eliminando tiempos de espera en compilación.
-            </p>
-          </div>
-          <div className="code-block">
-            <span style={{ color: '#888' }}># Crear proyecto</span>
-            <br />npm create vite@latest
-          </div>
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div style={{ flex: 1 }}>
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/npm/npm-original-wordmark.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="npm"/>
-            <h4 style={{ fontSize: '1.4rem' }}>npm</h4>
-            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
-              <strong>Propósito:</strong> Instalar y gestionar todas las librerías necesarias para que la app funcione.
-            </p>
-          </div>
-          <div className="code-block">
-            <span style={{ color: '#888' }}># Instalar dependencia</span>
-            <br />npm install {"<nombre>"}
-          </div>
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div style={{ flex: 1 }}>
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" style={{ height: '50px', marginBottom: '1rem' }} alt="Vercel"/>
-            <h4 style={{ fontSize: '1.4rem' }}>Vercel</h4>
-            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
-              <strong>Propósito:</strong> Despliegue continuo y hosting optimizado para aplicaciones frontend.
-            </p>
-          </div>
-          <div className="code-block">
-            <span style={{ color: '#888' }}># Desplegar app</span>
-            <br />vercel deploy
-          </div>
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="info-card" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ width: '50px', height: '50px', background: 'linear-gradient(135deg, #000, #333)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', color: 'white', fontWeight: 800 }}>AG</div>
-            <h4 style={{ fontSize: '1.4rem' }}>Antigravity</h4>
-            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
-              <strong>Propósito:</strong> Asistente de IA para el desarrollo y optimización de código en tiempo real.
-            </p>
-          </div>
-          <div className="code-block">
-            <span style={{ color: '#888' }}># Modo de trabajo</span>
-            <br />Pair Programming con IA
-          </div>
-        </motion.div>
-      </div>
-    )
+    content: <ToolsCarousel />
   },
   {
     id: 3,
@@ -1411,96 +1723,6 @@ const slidesData = [
   },
   {
     id: 4,
-    title: "n8n - Detalle del Flujo (1/9)",
-    subtitle: "Configuración inicial y Webhook",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n1.jpeg" alt="n8n step 1" />
-      </div>
-    )
-  },
-  {
-    id: 5,
-    title: "n8n - Detalle del Flujo (2/9)",
-    subtitle: "Extracción de datos del usuario",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n2.jpeg" alt="n8n step 2" />
-      </div>
-    )
-  },
-  {
-    id: 6,
-    title: "n8n - Detalle del Flujo (3/9)",
-    subtitle: "Procesamiento de IA - Análisis nutricional",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n3.jpeg" alt="n8n step 3" />
-      </div>
-    )
-  },
-  {
-    id: 7,
-    title: "n8n - Detalle del Flujo (4/9)",
-    subtitle: "Generación del plan de comidas",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n4.jpeg" alt="n8n step 4" />
-      </div>
-    )
-  },
-  {
-    id: 8,
-    title: "n8n - Detalle del Flujo (5/9)",
-    subtitle: "Validación de macronutrientes",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n5.jpeg" alt="n8n step 5" />
-      </div>
-    )
-  },
-  {
-    id: 9,
-    title: "n8n - Detalle del Flujo (6/9)",
-    subtitle: "Formateo del documento PDF",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n6.jpeg" alt="n8n step 6" />
-      </div>
-    )
-  },
-  {
-    id: 10,
-    title: "n8n - Detalle del Flujo (7/9)",
-    subtitle: "Integración con servicios de Email",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n7.jpeg" alt="n8n step 7" />
-      </div>
-    )
-  },
-  {
-    id: 11,
-    title: "n8n - Detalle del Flujo (8/9)",
-    subtitle: "Almacenamiento de logs y reportes",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n8.jpeg" alt="n8n step 8" />
-      </div>
-    )
-  },
-  {
-    id: 12,
-    title: "n8n - Detalle del Flujo (9/9)",
-    subtitle: "Finalización del proceso",
-    content: (
-      <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ZoomableImage src="/images/n8n/imagenn8n9.jpeg" alt="n8n step 9" />
-      </div>
-    )
-  },
-  {
-    id: 13,
     title: "¡Muchas Gracias!",
     subtitle: "Preguntas y dudas",
     content: (
@@ -1508,20 +1730,100 @@ const slidesData = [
         <motion.div 
           animate={{ scale: [1, 1.05, 1] }} 
           transition={{ duration: 4, repeat: Infinity }}
-          style={{ fontSize: '4rem', fontWeight: 800, background: 'linear-gradient(to right, #8B7355, #D4A373)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+          style={{ fontSize: '3rem', fontWeight: 800, background: 'linear-gradient(to right, var(--accent-secondary), var(--accent-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
         >
           ¿Consultas?
         </motion.div>
-        <p style={{ marginTop: '2rem', fontSize: '1.2rem', color: '#666' }}>Fin de la presentación</p>
+        <p style={{ marginTop: '1rem', fontSize: '1rem', color: 'var(--text-muted)' }}>Fin de la presentación</p>
+      </div>
+    )
+  },
+  {
+    id: 5,
+    title: "Nuestro Proyecto",
+    subtitle: "Analizar con QR o acceder al link",
+    content: (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', gap: '2rem' }}>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          style={{ 
+            background: 'white', 
+            padding: '3rem', 
+            borderRadius: '32px', 
+            boxShadow: '0 25px 60px rgba(0,0,0,0.1)',
+            border: '1px solid rgba(139, 115, 85, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '2rem',
+            maxWidth: '500px'
+          }}
+        >
+          <div style={{ padding: '1.5rem', background: '#fdfbf9', borderRadius: '24px', border: '2px solid #f0e6da', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.02)' }}>
+            <img 
+              src="/images/qr_proyecto.png" 
+              alt="QR Code Proyecto" 
+              style={{ width: '250px', height: '250px', display: 'block', borderRadius: '12px' }}
+            />
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center' }}>
+              <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to right, transparent, #D4A373)' }}></div>
+              <span style={{ fontSize: '0.8rem', color: '#8B7355', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px' }}>O ESCANEA</span>
+              <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to left, transparent, #D4A373)' }}></div>
+            </div>
+            
+            <a 
+              href="https://webappseminario.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                gap: '12px', 
+                background: 'linear-gradient(135deg, #8B7355, #D4A373)', 
+                color: 'white', 
+                padding: '16px 32px', 
+                borderRadius: '100px', 
+                textDecoration: 'none', 
+                fontWeight: 800,
+                fontSize: '1.1rem',
+                boxShadow: '0 15px 30px rgba(139, 115, 85, 0.3)',
+                transition: 'all 0.3s ease',
+                width: '100%'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <Share2 size={22} />
+              Analizar Proyecto
+            </a>
+          </div>
+        </motion.div>
       </div>
     )
   }
 ];
 
 
+
+
 export default function App() {
   const [[page, direction], setPage] = useState([0, 0]);
   const [selectedEcoItem, setSelectedEcoItem] = useState(null);
+  const [theme, setTheme] = useState('beige');
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const themeVars = THEMES[theme].vars;
+    Object.entries(themeVars).forEach(([key, value]) => {
+      root.style.setProperty(key, value);
+    });
+  }, [theme]);
   
   const slideIndex = Math.max(0, Math.min(page, slidesData.length - 1));
   const currentSlide = slidesData[slideIndex];
@@ -1587,7 +1889,7 @@ export default function App() {
                 )}
                 <div>
                   <motion.h2 key={displayTitle} variants={itemVariants} className="slide-title">{displayTitle}</motion.h2>
-                  {displaySubtitle && <motion.p variants={itemVariants} className="slide-content">{displaySubtitle}</motion.p>}
+                  {displaySubtitle && <motion.p variants={itemVariants} className="slide-subtitle">{displaySubtitle}</motion.p>}
                 </div>
               </div>
               <div className="slide-content">
@@ -1621,6 +1923,7 @@ export default function App() {
       </div>
 
       <PresentationTools isVisible={!!selectedEcoItem} />
+      <ThemeSwitcher currentTheme={theme} onThemeChange={setTheme} />
       <div className="progress-bar-container">
         <div className="progress-bar" style={{ width: `${((page + 1) / slidesData.length) * 100}%` }}></div>
       </div>
